@@ -194,7 +194,17 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gamestate_game.c" />
+    <ClCompile Include="gamestate_gameover.c" />
+    <ClCompile Include="gamestate_menu.c" />
+    <ClCompile Include="gamestate_splashscreen.c" />
     <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gamestate_game.h" />
+    <ClInclude Include="gamestate_gameover.h" />
+    <ClInclude Include="gamestate_menu.h" />
+    <ClInclude Include="gamestate_splashscreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
