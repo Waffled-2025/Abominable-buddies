@@ -54,7 +54,7 @@ void gamestate_splashscreen_update(void)
 	CP_Image_Draw(abominableLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, CP_System_GetWindowWidth() * scale, CP_System_GetWindowHeight() * scale, 255);
 
 
-	CP_Image_Draw(digipenLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, ((float)CP_System_GetWindowWidth()) / 2, ((float)CP_System_GetWindowHeight()) / 6, opacity);
+	CP_Image_Draw(digipenLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, 1051/2, 249/2, opacity);
 
 
 }
