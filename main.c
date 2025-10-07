@@ -14,7 +14,8 @@
 
 #include "cprocessing.h"
 //No I dont wanna
-//HELL NO
+//HELL NO\
+// meow :3
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void game_init(void)
