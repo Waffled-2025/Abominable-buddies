@@ -47,7 +47,7 @@ void gamestate_splashscreen_update(void)
 		fadeIn = 0;
 	}
 	else if (!fadeIn && scale < 1) {
-		scale += 0.01f;
+		scale += 0.05f;
 	}
 	
 	 
