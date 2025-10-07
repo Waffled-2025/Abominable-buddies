@@ -14,10 +14,22 @@
 #include "cprocessing.h"
 #include "gamestate_splashscreen.h"
 
+CP_Image digipenLogo;
+CP_Image abominableLogo;
+int opacity;
+int fadeIn;
+float scale;
+
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void gamestate_splashscreen_init(void)
 {
+	scale = 0;
+	CP_System_SetWindowSize(CP_System_GetDisplayWidth()/2, CP_System_GetDisplayHeight()/2);
+	opacity = 0;
+	digipenLogo = CP_Image_Load("./Assets/Digipen_Red.png");
+	abominableLogo = CP_Image_Load("./Assets/Untitled.png");
+	fadeIn = 1;
 	// initialize variables and CProcessing settings for this gamestate
 }
 
@@ -25,7 +37,26 @@ void gamestate_splashscreen_init(void)
 // this function will be called repeatedly every frame
 void gamestate_splashscreen_update(void)
 {
-	// check input, update simulation, render etc.
+	CP_Graphics_ClearBackground(CP_Color_Create(200, 200, 200, 0));
+	if (opacity <= 250 && fadeIn) {
+
+		opacity += 2;
+	}
+	else if (CP_System_GetSeconds() > 5 && opacity > 0) {
+		opacity -= 2;
+		fadeIn = 0;
+	}
+	else if (!fadeIn && scale < 1) {
+		scale += 0.01f;
+	}
+	
+	 
+	CP_Image_Draw(abominableLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, CP_System_GetWindowWidth() * scale, CP_System_GetWindowHeight() * scale, 255);
+
+
+	CP_Image_Draw(digipenLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, 1026, 249, opacity);
+
+
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the exit function

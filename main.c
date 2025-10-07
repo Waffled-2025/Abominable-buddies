@@ -13,9 +13,9 @@
 //---------------------------------------------------------
 
 #include "cprocessing.h"
-//No I dont wanna
-//HELL NO\
-// meow :3
+#include "gamestate_splashscreen.h"
+
+
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void game_init(void)
@@ -43,7 +43,7 @@ void game_exit(void)
 // CP_Engine_Run() is the core function that starts the simulation
 int main(void)
 {
-	CP_Engine_SetNextGameState(game_init, game_update, game_exit);
+	CP_Engine_SetNextGameState(gamestate_splashscreen_init, gamestate_splashscreen_update, gamestate_splashscreen_exit);
 	CP_Engine_Run();
 	return 0;
 }
