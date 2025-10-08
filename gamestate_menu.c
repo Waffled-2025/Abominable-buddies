@@ -16,21 +16,21 @@
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
-void gamestate_template_init(void)
+void gamestate_menu_init(void)
 {
 	// initialize variables and CProcessing settings for this gamestate
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the update function
 // this function will be called repeatedly every frame
-void gamestate_template_update(void)
+void gamestate_menu_update(void)
 {
 	// check input, update simulation, render etc.
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the exit function
 // this function will be called once just before leaving the current gamestate
-void gamestate_template_exit(void)
+void gamestate_menu_exit(void)
 {
 	// shut down the gamestate and cleanup any dynamic memory
 }

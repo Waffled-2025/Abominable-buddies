@@ -13,12 +13,14 @@
 
 #include "cprocessing.h"
 #include "gamestate_splashscreen.h"
+#include "gamestate_menu.h"
 
 CP_Image digipenLogo;
 CP_Image abominableLogo;
 int opacity;
 int fadeIn;
 float scale;
+float time;
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
@@ -48,6 +50,11 @@ void gamestate_splashscreen_update(void)
 	}
 	else if (!fadeIn && scale < 1) {
 		scale += 0.05f;
+		time = CP_System_GetSeconds();
+	}
+	else if (CP_System_GetSeconds() - time > 4) {
+		CP_Engine_SetNextGameState(gamestate_menu_init, gamestate_menu_update, gamestate_menu_exit);
+
 	}
 	
 	 

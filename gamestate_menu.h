@@ -13,6 +13,6 @@
 
 #pragma once
 
-void gamestate_template_init(void);
-void gamestate_template_update(void);
-void gamestate_template_exit(void);
+void gamestate_menu_init(void);
+void gamestate_menu_update(void);
+void gamestate_menu_exit(void);
