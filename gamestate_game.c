@@ -18,7 +18,7 @@
 // this function will be called once at the beginning of the program
 void gamestate_game_init(void)
 {
-	// initialize variables and CProcessing settings for this gamestate
+	
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the update function
