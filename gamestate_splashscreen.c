@@ -52,10 +52,10 @@ void gamestate_splashscreen_update(void)
 		scale += 0.05f;
 		time = CP_System_GetSeconds();
 	}
-	else if (CP_System_GetSeconds() - time > 4) {
-		CP_Engine_SetNextGameState(gamestate_menu_init, gamestate_menu_update, gamestate_menu_exit);
+	//else if () {
+	//	CP_Engine_SetNextGameState(gamestate_menu_init, gamestate_menu_update, gamestate_menu_exit);
 
-	}
+	//}
 	
 	 
 	CP_Image_Draw(abominableLogo, (float)CP_System_GetWindowWidth() / 2, (float)CP_System_GetWindowHeight() / 2, CP_System_GetWindowWidth() * scale, CP_System_GetWindowHeight() * scale, 255);
