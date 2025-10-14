@@ -16,12 +16,13 @@
 #include "math.h"
 #include "stdbool.h"
 #include "stdlib.h"
+#include "stdio.h"
 
 
 
 typedef struct { // Character template for player and enemy characters
 	char name[50];
-	CP_Image characterSprite;
+	//CP_Image characterSprite;
 	int health;
 	int mana;
 	int manaRegen;
@@ -30,6 +31,67 @@ typedef struct { // Character template for player and enemy characters
 	int xPosition;
 	int yPosition;
 } Character;
+
+Character playerOne = { "Wizard", 80, 100, 50, .0f, 10, 200, 300 }; // Initilization of the wizard player character
+Character playerTwo = { "Tank", 120, 30, 15, .3f, 5, 200, 800 };
+Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 200, 1300 };
+
+Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 10, 900, 300 };
+Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 10, 900, 800 };
+Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 10, 900, 1300 };
+
+
+float selectButtonY;
+
+void buttonSelect(float _selectButtonY) {
+
+
+	int selectedAction = 1;
+
+	if (CP_Input_KeyTriggered(KEY_DOWN)) {
+		if (selectButtonY < 300) {
+			selectButtonY += 100;
+			selectedAction += 1;
+		}
+		else {
+			selectButtonY = 100;
+			selectedAction = 1;
+
+		}
+
+	}
+	if (CP_Input_KeyTriggered(KEY_UP)) {
+		if (selectButtonY > 100) {
+			selectButtonY -= 100;
+			selectedAction -= 1;
+
+		}
+		else {
+			selectButtonY = 300;
+			selectedAction = 3;
+
+		}
+
+	}
+
+
+	if (CP_Input_KeyTriggered(KEY_ENTER)) {
+		switch (selectedAction) {
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+
+			break;
+		}
+	}
+
+
+	
+}
 
 
 
@@ -60,31 +122,55 @@ void character_tank_defend(Character _tank) {
 
 void gamestate_fight_init(void)
 {
-	CP_System_Fullscreen();
+	CP_System_SetWindowSize(1200, 800);
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
-	//Character playerOne = { "Wizard", CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), 80, 100, 50, .0f, 10, 200, 300}; // Initilization of the wizard player character
-	//Character playerTwo = { "Tank",  CP_Image_Load("./Assets/Its merely a flesh wound.png"), 120, 30, 15, .3f, 5, 200, 800 }; // Initilization of the tank player character
-	//Character playerThree = { "Rogue",  CP_Image_Load("./Assets/sneak sneak.png"), 90, 50, 0, .1f, 15, 200, 1300 }; // rogue
-	//
-	//Character enemyOne = { "Stupid idiot 1",  CP_Image_Load("./Assets/s n o w m e n e m y.png"), 100, 100, 25, 0.2f, 10, 900, 300 };
-	//Character enemyTwo = { "Stupid idiot 2",  CP_Image_Load("./Assets/s n o w m e n e m y.png"), 100, 100, 25, 0.2f, 10, 900, 800 };
-	//Character enemyThree = { "Stupid idiot 3",  CP_Image_Load("./Assets/s n o w m e n e m y.png"), 100, 100, 25, 0.2f, 10, 900, 1300 };
+	CP_Settings_TextSize(45);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
-
+	selectButtonY = 100;
 	
 
-
-	
 	
 }
 
 void gamestate_fight_update(void)
 {
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
-
+	
+	CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), (float)CP_System_GetWindowWidth()/2 , (float)CP_System_GetWindowHeight() / 2 + ((float)CP_System_GetWindowHeight()/4), 256, 256, 255);
+	CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), (float)CP_System_GetWindowWidth() / 2  , (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4), 256, 256, 255);
+	CP_Image_Draw(CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), (float)CP_System_GetWindowWidth() / (12/(float)5), (float)CP_System_GetWindowHeight() / 2 , 256, 256, 255);
 
 	
+	CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 3, (float)CP_System_GetWindowHeight() / 2, 256, 256, 255);
+	CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4, (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4), 256, 256, 255);
+	CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4, (float)CP_System_GetWindowHeight() / 2 + ((float)CP_System_GetWindowHeight() / 4), 256, 256, 255);
+
+
+
+	CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+
+	CP_Graphics_DrawRect(100, 100, 150, 75);
+
+	CP_Graphics_DrawRect(100, 200, 150, 75);
+
+	CP_Graphics_DrawRect(100, 300, 150, 75);
+
+
+	CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+
+	CP_Font_DrawText("ATTACK", 100, 100);
+	CP_Font_DrawText("DEFEND", 100, 200);
+	CP_Font_DrawText("REST", 100, 300);
+	
+
+	CP_Image_Draw(CP_Image_Load("./Assets/button_select.png"), 100, selectButtonY, 128*1.5, 128*1.5, 255);
+	buttonSelect(selectButtonY);
+
+
+
+
 }
 
 

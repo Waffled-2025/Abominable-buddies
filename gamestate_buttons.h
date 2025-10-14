@@ -14,4 +14,5 @@
 #pragma once
 
 int button_func(float colliderX, float colliderY, float rectXDimension, float rectYDimension, float rectXPos, float rectYPos);
+int button_func_circle(float colliderX, float colliderY, float circleXPos, float circleYPos, float circleDiameter);
 

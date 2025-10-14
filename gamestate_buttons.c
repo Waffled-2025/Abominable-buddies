@@ -21,3 +21,7 @@ int button_func(float colliderX, float colliderY, float rectXDimension, float re
 	return ((colliderX < (rectXPos + (rectXDimension / 2)) && colliderX >(rectXPos - (rectXDimension / 2))) &&
 		(colliderY < (rectYPos + (rectYDimension / 2)) && colliderY >(rectYPos - (rectYDimension / 2))));
 }
+int button_func_circle(float colliderX, float colliderY, float circleXPos, float circleYPos, float circleDiameter) {
+	return ((hypot(colliderX - circleXPos, colliderY - circleYPos)) < circleDiameter / 2);
+
+}
