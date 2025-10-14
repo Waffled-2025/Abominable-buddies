@@ -45,6 +45,10 @@ float selectButtonY;
 int buttonSelectOpacity;
 int actionSelect;
 
+float characterSelectY;
+float characterSelectX;
+int enemySelectOpacity;
+int enemySelect;
 
 
 
@@ -88,7 +92,7 @@ void buttonSelect(float _selectButtonY) {
 	if (CP_Input_KeyTriggered(KEY_ENTER)) {
 		switch (selectedAction) {
 		case 1:
-
+			enemySelect = 1;
 			break;
 		case 2:
 
@@ -97,6 +101,7 @@ void buttonSelect(float _selectButtonY) {
 
 			break;
 		}
+		actionSelect = 0;
 	}
 
 
@@ -141,6 +146,9 @@ void gamestate_fight_init(void)
 	selectButtonY = 100;
 	buttonSelectOpacity = 0;
 	actionSelect = 1;
+	enemySelect = 0;
+	characterSelectY = (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4);
+	characterSelectX = (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4;
 	
 }
 
@@ -187,7 +195,13 @@ void gamestate_fight_update(void)
 
 
 	}
+	if (enemySelect) {
+		enemySelectOpacity = 255;
 
+		CP_Image_Draw(CP_Image_Load("./Assets/character_select.png"), characterSelectX, characterSelectY, 128 * 1.5, 128 * 1.5, 255);
+
+		enemySelectOpacity = 0;
+	}
 
 
 
