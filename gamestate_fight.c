@@ -42,6 +42,16 @@ Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 10, 900, 1300 };
 
 
 float selectButtonY;
+int buttonSelectOpacity;
+int actionSelect;
+
+
+
+
+
+
+
+
 
 void buttonSelect(float _selectButtonY) {
 
@@ -129,8 +139,8 @@ void gamestate_fight_init(void)
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
 	selectButtonY = 100;
-	
-
+	buttonSelectOpacity = 0;
+	actionSelect = 1;
 	
 }
 
@@ -165,8 +175,20 @@ void gamestate_fight_update(void)
 	CP_Font_DrawText("REST", 100, 300);
 	
 
-	CP_Image_Draw(CP_Image_Load("./Assets/button_select.png"), 100, selectButtonY, 128*1.5, 128*1.5, 255);
-	buttonSelect(selectButtonY);
+
+
+
+	if (actionSelect) {
+
+		buttonSelectOpacity = 255;
+		buttonSelect(selectButtonY);
+		CP_Image_Draw(CP_Image_Load("./Assets/button_select.png"), 100, selectButtonY, 128*1.5, 128*1.5, 255);
+		buttonSelectOpacity = 0;
+
+
+	}
+
+
 
 
 
