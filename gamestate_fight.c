@@ -20,7 +20,7 @@
 
 
 
-typedef struct { // Character template for player and enemy characters
+struct Character { // Character template for player and enemy characters
 	char name[50];
 	//CP_Image characterSprite;
 	int health;
@@ -30,15 +30,15 @@ typedef struct { // Character template for player and enemy characters
 	int attackDamage;
 	int xPosition;
 	int yPosition;
-} Character;
+};
 
-Character playerOne = { "Wizard", 80, 100, 50, .0f, 10, 200, 300 }; // Initilization of the wizard player character
-Character playerTwo = { "Tank", 120, 30, 15, .3f, 5, 200, 800 };
-Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 200, 1300 };
+struct Character playerOne = { "Wizard", 80, 100, 50, .0f, 10, 200, 300 }; // Initilization of the wizard player character
+struct Character playerTwo = { "Tank", 120, 30, 15, .3f, 5, 200, 800 };
+struct Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 200, 1300 };
 
-Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 10, 900, 300 };
-Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 10, 900, 800 };
-Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 10, 900, 1300 };
+struct Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 10, 900, 300 };
+struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 10, 900, 800 };
+struct Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 10, 900, 1300 };
 
 
 float selectButtonY;
@@ -49,6 +49,9 @@ float characterSelectY;
 float characterSelectX;
 int enemySelectOpacity;
 int enemySelect;
+int selectedEnemy;
+
+int delay;
 
 
 
@@ -56,8 +59,21 @@ int enemySelect;
 
 
 
+void character_action_attack(struct Character *_player, struct Character *_enemy, int _attacker) { // function for attacks: (attacker --- 0 means player attacks enemy, 1 is other
+	switch (_attacker) {
+	case 0: // Enemy loses health = to player characters attack damage (min = attackDamage, max = attackDamage + 10, eg 15 - 25 or 30 - 40)
+		_enemy->health -= (rand() % ((10 + _player->attackDamage) - _player->attackDamage) + _player->attackDamage);
+		return;
+	case 1: // Player loses health
+		_player->health -= (rand() % ((10 + _enemy->attackDamage) - _enemy->attackDamage) + _enemy->attackDamage);
+		return;
+	}
+}
 
-void buttonSelect(float _selectButtonY) {
+
+
+
+void button_Select(float _selectButtonY) {
 
 
 	int selectedAction = 1;
@@ -102,33 +118,75 @@ void buttonSelect(float _selectButtonY) {
 			break;
 		}
 		actionSelect = 0;
+		delay = 1;
 	}
 
-
-	
 }
+void enemy_Select() {
 
+	float time;
+	if (CP_Input_KeyTriggered(KEY_DOWN)) {
+		if (characterSelectY < (float)CP_System_GetWindowHeight() / 2 + ((float)CP_System_GetWindowHeight() / 4)) {
+			characterSelectY += ((float)CP_System_GetWindowHeight() / 4);
+			selectedEnemy += 1;
+		}
+		else {
+			characterSelectY = (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4);
 
+			selectedEnemy = 1;
 
+		}
 
+	}
+	if (CP_Input_KeyTriggered(KEY_UP)) {
+		if (characterSelectY > (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4)) {
+			characterSelectY -= ((float)CP_System_GetWindowHeight() / 4);
+			selectedEnemy -= 1;
 
+		}
+		else {
+			characterSelectY = (float)CP_System_GetWindowHeight() / 2 + ((float)CP_System_GetWindowHeight() / 4);
+			selectedEnemy = 3;
 
-void character_action_attack(Character _player, Character _enemy, int _attacker) { // function for attacks: (attacker --- 0 means player attacks enemy, 1 is other
-	switch (_attacker) {
-		case 0: // Enemy loses health = to player characters attack damage (min = attackDamage, max = attackDamage + 10, eg 15 - 25 or 30 - 40)
-			_enemy.health -= (rand() % ((10 + _player.attackDamage) - _player.attackDamage) + _player.attackDamage); 
-			return;
-		case 1: // Player loses health
-			_player.health -= (rand() % ((10 + _enemy.attackDamage) - _enemy.attackDamage) + _enemy.attackDamage);
-			return;
+		}
+
+	}
+	if (selectedEnemy == 2) {
+		characterSelectX = (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 3;
+	}
+	else {
+		characterSelectX = (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4;
+	}
+	if (delay) {
+		time = CP_System_GetSeconds();
+		delay = 0;
+	}
+	else
+		time = 0;
+	if (CP_System_GetSeconds() - time > 0.5) {
+
+		if (CP_Input_KeyTriggered(KEY_ENTER)) {
+			switch (selectedEnemy) {
+			case 1:
+				character_action_attack(&playerOne, &enemyOne, 0);
+				break;
+			case 2:
+				character_action_attack(&playerOne, &enemyTwo, 0);
+				break;
+			case 3:
+				character_action_attack(&playerOne, &enemyThree, 0);
+				break;
+			}
+			enemySelect = 0;
+		}
 	}
 }
-void character_wizard_meditate(Character _wizard) {
-	_wizard.mana += (rand() % ((_wizard.manaRegen + 5) - (_wizard.manaRegen - 5)) + (_wizard.manaRegen - 5));
-}
-void character_tank_defend(Character _tank) {
-	_tank.defense += 0.45f;
-}
+
+
+
+
+
+
 
 
 
@@ -149,7 +207,8 @@ void gamestate_fight_init(void)
 	enemySelect = 0;
 	characterSelectY = (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4);
 	characterSelectX = (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4;
-	
+	selectedEnemy = 1;
+
 }
 
 void gamestate_fight_update(void)
@@ -189,17 +248,15 @@ void gamestate_fight_update(void)
 	if (actionSelect) {
 
 		buttonSelectOpacity = 255;
-		buttonSelect(selectButtonY);
+		button_Select(selectButtonY);
 		CP_Image_Draw(CP_Image_Load("./Assets/button_select.png"), 100, selectButtonY, 128*1.5, 128*1.5, 255);
 		buttonSelectOpacity = 0;
-
-
 	}
 	if (enemySelect) {
+
 		enemySelectOpacity = 255;
-
+		enemy_Select(characterSelectX, characterSelectY);
 		CP_Image_Draw(CP_Image_Load("./Assets/character_select.png"), characterSelectX, characterSelectY, 128 * 1.5, 128 * 1.5, 255);
-
 		enemySelectOpacity = 0;
 	}
 
