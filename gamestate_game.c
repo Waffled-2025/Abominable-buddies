@@ -31,15 +31,73 @@ void gamestate_game_update(void)
 {
 	CP_Graphics_ClearBackground(CP_Color_Create(200, 200, 200, 0));
 
-	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));
-	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f) + 475, CP_System_GetWindowWidth() / 15.f);
-	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f)+475, CP_System_GetWindowWidth() / 15.f)) {
+	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));//first encounter
+	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f) + 475, CP_System_GetWindowWidth() / 18.f);
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f)+475, CP_System_GetWindowWidth() / 18.f)) {
 		CP_Settings_Fill(CP_Color_Create(11, 3, 252, 255));
-		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f) + 475, CP_System_GetWindowWidth() / 15.f);
+		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f) + 475, CP_System_GetWindowWidth() / 18.f);
 	}
-	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f)+475, CP_System_GetWindowWidth() / 15.f) && CP_Input_MouseClicked()) {
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 200, ((float)CP_System_GetWindowHeight() / 3.f)+475, CP_System_GetWindowWidth() / 18.f) && CP_Input_MouseClicked()) {
 		CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
 	}
+
+	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));//second encounter
+	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f + 100, ((float)CP_System_GetWindowHeight() / 3.f)+300 , CP_System_GetWindowWidth() / 18.f);
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f + 100, ((float)CP_System_GetWindowHeight() / 3.f)+300 , CP_System_GetWindowWidth() / 18.f)) {
+		CP_Settings_Fill(CP_Color_Create(11, 3, 252, 255));
+		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f + 100, ((float)CP_System_GetWindowHeight() / 3.f)+300 , CP_System_GetWindowWidth() / 18.f);
+	}
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f + 100, ((float)CP_System_GetWindowHeight() / 3.f)+300 , CP_System_GetWindowWidth() / 18.f) && CP_Input_MouseClicked()) {
+		CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	}
+
+	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));//third encounter
+	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 350, ((float)CP_System_GetWindowHeight() / 3.f) + 100, CP_System_GetWindowWidth() / 18.f);
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 350, ((float)CP_System_GetWindowHeight() / 3.f) + 100, CP_System_GetWindowWidth() / 18.f)) {
+		CP_Settings_Fill(CP_Color_Create(11, 3, 252, 255));
+		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f - 350, ((float)CP_System_GetWindowHeight() / 3.f) + 100, CP_System_GetWindowWidth() / 18.f);
+	}
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f - 350, ((float)CP_System_GetWindowHeight() / 3.f) + 100, CP_System_GetWindowWidth() / 18.f) && CP_Input_MouseClicked()) {
+		CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	}
+
+	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));//fourth encounter
+	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f + 350, ((float)CP_System_GetWindowHeight() / 3.f) , CP_System_GetWindowWidth() / 18.f);
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f + 350, ((float)CP_System_GetWindowHeight() / 3.f) , CP_System_GetWindowWidth() / 18.f)) {
+		CP_Settings_Fill(CP_Color_Create(11, 3, 252, 255));
+		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f + 350, ((float)CP_System_GetWindowHeight() / 3.f) , CP_System_GetWindowWidth() / 18.f);
+	}
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f + 350, ((float)CP_System_GetWindowHeight() / 3.f) , CP_System_GetWindowWidth() / 18.f) && CP_Input_MouseClicked()) {
+		CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	}
+
+	CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));//Boss encounter
+	CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f , 0, CP_System_GetWindowWidth() / 4.f);
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f , 0, CP_System_GetWindowWidth() / 4.f)) {
+		CP_Settings_Fill(CP_Color_Create(11, 3, 252, 255));
+		CP_Graphics_DrawCircle((float)CP_System_GetWindowWidth() / 2.f , 0, CP_System_GetWindowWidth() / 4.f);
+	}
+	if (button_func_circle(CP_Input_GetMouseX(), CP_Input_GetMouseY(), (float)CP_System_GetWindowWidth() / 2.f , 0, CP_System_GetWindowWidth() / 4.f) && CP_Input_MouseClicked()) {
+		CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// check input, update simulation, render etc.
 }
 

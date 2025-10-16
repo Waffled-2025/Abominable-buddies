@@ -31,7 +31,7 @@ void gamestate_splashscreen_init(void)
 	CP_System_SetWindowSize(CP_System_GetDisplayWidth()/2, CP_System_GetDisplayHeight()/2);
 	opacity = 0;
 	digipenLogo = CP_Image_Load("./Assets/Digipen_Red.png");
-	abominableLogo = CP_Image_Load("./Assets/Untitled.png");
+	abominableLogo = CP_Image_Load("./Assets/AS_LOGO.png");
 	fadeIn = 1;
 	// initialize variables and CProcessing settings for this gamestate
 }
