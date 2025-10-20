@@ -59,13 +59,15 @@ int selectedAction;
 int characterTurn;
 int upDown;
 
+int enemyActionChoice;
 
-void character_action_attack(struct Character* _player, struct Character* _enemy, int _attacker);
+
+void character_action_attack(struct Character* _character1, struct Character* _character2);
 void button_Select();
-void enemy_Select();
-void enemy_Turn();
+void enemy_Select(struct Character _player);
+void enemy_Turn(struct Character _enemy);
 void character_action_heal(struct Character* _characterHealer, struct Character* _characterHealed);
-void player_Turn();
+void player_Turn(struct Character _character);
 void draw_characters();
 
 void turn_manager();
@@ -103,24 +105,9 @@ void gamestate_fight_update(void)
 {
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
-
-	
 	draw_characters();
 
-
-
-
-	
-
-
-	
-
-
 	turn_manager();
-
-
-
-
 
 	debug();
 
@@ -135,16 +122,9 @@ void gamestate_fight_exit(void)
 
 
 
-void character_action_attack(struct Character* _player, struct Character* _enemy, int _attacker) { // function for attacks: (attacker --- 0 means player attacks enemy, 1 is other
-	characterTurn += 1;
-	switch (_attacker) {
-		case 0: // Enemy loses health = to player characters attack damage (min = attackDamage, max = attackDamage + 10, eg 15 - 25 or 30 - 40)
-			_enemy->health -= (rand() % ((10 + _player->attackDamage) - _player->attackDamage) + _player->attackDamage);
-			return;
-		case 1: // Player loses health
-			_player->health -= (rand() % ((10 + _enemy->attackDamage) - _enemy->attackDamage) + _enemy->attackDamage);
-			return;
-	}
+void character_action_attack(struct Character* _character1, struct Character* _character2) { // function for attacks: (attacker --- 0 means player attacks enemy, 1 is other
+	_character2->health -= (rand() % ((10 + _character1->attackDamage) - _character1->attackDamage) + _character1->attackDamage);
+	return;
 }
 
 
@@ -208,7 +188,7 @@ void button_Select() {
 	}
 
 }
-void enemy_Select() {
+void enemy_Select(struct Character _player) {
 
 	float time;
 	if (CP_Input_KeyTriggered(KEY_DOWN)) {
@@ -255,8 +235,6 @@ void enemy_Select() {
 	case 0:
 		selectedEnemy = 3;
 		break;
-	default:
-		break;
 	}
 
 
@@ -271,25 +249,24 @@ void enemy_Select() {
 		if (CP_Input_KeyTriggered(KEY_ENTER)) {
 			switch (selectedEnemy) {
 			case 1:
-				character_action_attack(&playerOne, &enemyOne, 0);
+				character_action_attack(&_player, &enemyOne);
 				break;
 			case 2:
-				character_action_attack(&playerOne, &enemyTwo, 0);
+				character_action_attack(&_player, &enemyTwo);
 				break;
 			case 3:
-				character_action_attack(&playerOne, &enemyThree, 0);
+				character_action_attack(&_player, &enemyThree);
 				break;
 			}
 			enemySelect = 0;
-			playerTurn = 0;
+			characterTurn += 1;
 		}
 	}
 }
 
-void enemy_Turn() {
+void enemy_Turn(struct Character _enemy) {
 
-	if (!enemyTurn) { return; }
-	int enemyActionChoice = (rand() % 2) + 1;
+	enemyActionChoice = (rand() % 2) + 1;
 
 
 	if (enemyActionChoice == 1) {
@@ -298,13 +275,13 @@ void enemy_Turn() {
 
 		switch (enemyAttackChoice) {
 		case 1: 
-			character_action_attack(&playerOne, &enemyOne, 1);
+			character_action_attack(&enemyOne, &playerOne);
 			break;
 		case 2:
-			character_action_attack(&playerTwo, &enemyOne, 1);
+			character_action_attack(&enemyOne, &playerTwo);
 			break;
 		case 3:
-			character_action_attack(&playerThree, &enemyOne, 1);
+			character_action_attack(&enemyOne, &playerThree);
 			break;
 		}
 
@@ -324,11 +301,53 @@ void enemy_Turn() {
 			break;
 		}
 	}
-	enemyTurn = 0;
+	characterTurn += 1;
 	actionSelect = 1;
 }
-void player_Turn() {
-	if (!playerTurn) { return; }
+void player_Turn(struct Character _character) {
+
+	switch (characterTurn) {
+	case 1:
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+		CP_Graphics_DrawRect(100, 100, 150, 75);
+		CP_Graphics_DrawRect(100, 200, 150, 75);
+		CP_Graphics_DrawRect(100, 300, 150, 75);
+
+		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+		CP_Font_DrawText("ATTACK", 100, 100);
+		CP_Font_DrawText("DEFEND", 100, 200);
+		CP_Font_DrawText("REST", 100, 300);
+
+
+		break;
+
+	case 3:
+		
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+		CP_Graphics_DrawRect(100, 100, 150, 75);
+		CP_Graphics_DrawRect(100, 200, 150, 75);
+		CP_Graphics_DrawRect(100, 300, 150, 75);
+
+		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+		CP_Font_DrawText("ATTACK", 100, 100);
+		CP_Font_DrawText("HEAL", 100, 200);
+		CP_Font_DrawText("MEDITATE", 100, 300);
+
+		break;
+
+	case 5:
+		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+		CP_Graphics_DrawRect(100, 100, 150, 75);
+		CP_Graphics_DrawRect(100, 200, 150, 75);
+		CP_Graphics_DrawRect(100, 300, 150, 75);
+
+		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+		CP_Font_DrawText("ATTACK", 100, 100);
+		CP_Font_DrawText("BACK STAB", 100, 200);
+		CP_Font_DrawText("STEALTH", 100, 300);
+
+	}
+
 	if (actionSelect) {
 
 		buttonSelectOpacity = 255;
@@ -339,7 +358,7 @@ void player_Turn() {
 	if (enemySelect) {
 
 		enemySelectOpacity = 255;
-		enemy_Select(characterSelectX, characterSelectY);
+		enemy_Select(_character);
 		CP_Image_Draw(CP_Image_Load("./Assets/character_select.png"), characterSelectX, characterSelectY, 128 * 1.5, 128 * 1.5, 255);
 		enemySelectOpacity = 0;
 	}
@@ -359,24 +378,21 @@ void draw_characters() {
 		CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), playerOne.xPosition, playerOne.yPosition, 256, 256, 255);
 	}
 	else if (characterTurn == 1) {
-		characterTurn += 1;
-		enemyTurn = 1;
+		//characterTurn += 1;
 
 	}
 	if (playerTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), playerTwo.xPosition, playerTwo.yPosition, 256, 256, 255);
 	}
 	else if (characterTurn == 3) {
-		characterTurn += 1;
-		enemyTurn = 1;
+		//characterTurn += 1;
 
 	}
 	if (playerThree.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, 106, 255);
 	}
 	else if (characterTurn == 5) {
-		characterTurn += 1;
-		enemyTurn = 1;
+		//characterTurn += 1;
 
 	}
 
@@ -384,27 +400,24 @@ void draw_characters() {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyOne.xPosition, enemyOne.yPosition, 256, 256, 255);
 	}
 	else if (characterTurn == 2) {
-		characterTurn += 1;
-		playerTurn = 1;
-		actionSelect = 1;
+		//characterTurn += 1;
+
 
 	}
 	if (enemyTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyTwo.xPosition, enemyTwo.yPosition, 256, 256, 255);
 	}
 	else if (characterTurn == 4) {
-		characterTurn += 1;
-		playerTurn = 1;
-		actionSelect = 1;
+		//characterTurn += 1;
+
 
 	}
 	if (enemyThree.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyThree.xPosition, enemyThree.yPosition, 256, 256, 255);
 	}
 	else if (characterTurn == 6) {
-		characterTurn += 1;
-		playerTurn = 1;
-		actionSelect = 1;
+		//characterTurn += 1;
+
 
 	}
 }
@@ -418,62 +431,26 @@ void turn_manager() {
 
 	switch (characterTurn) {
 	case 1:
-		playerTurn = 1;
-		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		CP_Graphics_DrawRect(100, 100, 150, 75);
-		CP_Graphics_DrawRect(100, 200, 150, 75);
-		CP_Graphics_DrawRect(100, 300, 150, 75);
-
-		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
-		CP_Font_DrawText("ATTACK", 100, 100);
-		CP_Font_DrawText("DEFEND", 100, 200);
-		CP_Font_DrawText("REST", 100, 300);
-
-		player_Turn();
+		player_Turn(playerOne);
 
 		break;
 	case 2:
-		enemyTurn = 1;
-		enemy_Turn();
+		enemy_Turn(enemyOne);
 
 		break;
 	case 3:
-		playerTurn = 1;
-		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		CP_Graphics_DrawRect(100, 100, 150, 75);
-		CP_Graphics_DrawRect(100, 200, 150, 75);
-		CP_Graphics_DrawRect(100, 300, 150, 75);
-
-		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
-		CP_Font_DrawText("ATTACK", 100, 100);
-		CP_Font_DrawText("HEAL", 100, 200);
-		CP_Font_DrawText("MEDITATE", 100, 300);
-
-		player_Turn();
+		player_Turn(playerTwo);
 
 		break;
 	case 4:
-		enemyTurn = 1;
-		enemy_Turn();
+		enemy_Turn(enemyTwo);
 
 		break;
 	case 5:
-		playerTurn = 1;
-		CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
-		CP_Graphics_DrawRect(100, 100, 150, 75);
-		CP_Graphics_DrawRect(100, 200, 150, 75);
-		CP_Graphics_DrawRect(100, 300, 150, 75);
-
-		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
-		CP_Font_DrawText("ATTACK", 100, 100);
-		CP_Font_DrawText("BACK STAB", 100, 200);
-		CP_Font_DrawText("STEALTH", 100, 300);
-
-		player_Turn();
+		player_Turn(playerThree);
 
 	case 6:
-		enemyTurn = 1;
-		enemy_Turn();
+		enemy_Turn(enemyThree);
 
 		break;
 	default:
