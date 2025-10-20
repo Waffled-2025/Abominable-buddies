@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="gamestate_buttons.c" />
+    <ClCompile Include="gamestate_fight.c" />
+    <ClCompile Include="gamestate_game.c" />
+    <ClCompile Include="gamestate_gameover.c" />
+    <ClCompile Include="gamestate_menu.c" />
+    <ClCompile Include="gamestate_splashscreen.c" />
+    <ClCompile Include="main.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="character_functions.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_buttons.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_fight.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_game.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_gameover.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_menu.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_splashscreen.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="header files">
+      <UniqueIdentifier>{a7dc2300-306f-48e5-b516-1e31f9473eb4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
