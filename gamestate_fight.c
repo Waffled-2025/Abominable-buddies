@@ -17,27 +17,17 @@
 #include "stdbool.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "character_functions.h"
 
 
-struct Character { // Character template for player and enemy characters
-	char name[50];
-	//CP_Image characterSprite;
-	int health;
-	int mana;
-	int manaRegen;
-	float defense;
-	int attackDamage;
-	float xPosition;
-	float yPosition;
-};
 
-struct Character playerOne = { "Tank", 120, 30, 15, .3f, 5, 600, 200 };
-struct Character playerTwo = { "Wizard", 80, 100, 50, .0f, 10, 500, 400 }; 
-struct Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 600, 600 };
+struct Character playerOne = { "Tank", 120, 30, 15, .3f, 5, 600, 200, 0 };
+struct Character playerTwo = { "Wizard", 80, 100, 50, .0f, 10, 500, 400, 0 }; 
+struct Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 600, 600, 0 };
 
-struct Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 5, 900, 200 };
-struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 5, 1000, 400 };
-struct Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 5, 900, 600 };
+struct Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 5, 900, 200, 0 };
+struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 5, 1000, 400, 0 };
+struct Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 5, 900, 600, 0 };
 
 
 float selectButtonY;
@@ -62,12 +52,16 @@ int upDown;
 int enemyActionChoice;
 
 
-void character_action_attack(struct Character* _character1, struct Character* _character2);
-void button_Select();
-void enemy_Select(struct Character _player);
+
+int allySelect;
+int selectedAlly;
+
+
+
+void button_Select(struct Character* _character);
+void enemy_Select(struct Character* _player);
 void enemy_Turn(struct Character _enemy);
-void character_action_heal(struct Character* _characterHealer, struct Character* _characterHealed);
-void player_Turn(struct Character _character);
+void player_Turn(struct Character* _character);
 void draw_characters();
 
 void turn_manager();
@@ -98,6 +92,8 @@ void gamestate_fight_init(void)
 	playerTurn = 1;
 	characterTurn = 1;
 	upDown = 0;
+	allySelect = 0;
+	selectedAlly = 1;
 
 }
 
@@ -120,17 +116,7 @@ void gamestate_fight_exit(void)
 }
 
 
-
-
-void character_action_attack(struct Character* _character1, struct Character* _character2) { // function for attacks: (attacker --- 0 means player attacks enemy, 1 is other
-	_character2->health -= (rand() % ((10 + _character1->attackDamage) - _character1->attackDamage) + _character1->attackDamage);
-	return;
-}
-
-
-
-
-void button_Select() {
+void button_Select(struct Character* _character) {
 
 
 
@@ -167,9 +153,30 @@ void button_Select() {
 			enemySelect = 1;
 			break;
 		case 2:
+			if (_character == &playerOne) {
+				character_action_defend(_character);
+				characterTurn += 1;
+			}
+			if (_character == &playerTwo) {
+				allySelect = 1;
+			}
+			if (_character == &playerThree) {
+				characterTurn += 1;
+			}
 
 			break;
 		case 3:
+			if (_character == &playerOne) {
+				character_action_rest(_character);
+			}
+			if (_character == &playerTwo) {
+				character_action_meditate(_character);
+			}
+			if (_character == &playerThree) {
+
+			}
+
+			characterTurn += 1;
 
 			break;
 		}
@@ -188,7 +195,7 @@ void button_Select() {
 	}
 
 }
-void enemy_Select(struct Character _player) {
+void enemy_Select(struct Character* _player) {
 
 	float time;
 	if (CP_Input_KeyTriggered(KEY_DOWN)) {
@@ -249,13 +256,13 @@ void enemy_Select(struct Character _player) {
 		if (CP_Input_KeyTriggered(KEY_ENTER)) {
 			switch (selectedEnemy) {
 			case 1:
-				character_action_attack(&_player, &enemyOne);
+				character_action_attack(_player, &enemyOne);
 				break;
 			case 2:
-				character_action_attack(&_player, &enemyTwo);
+				character_action_attack(_player, &enemyTwo);
 				break;
 			case 3:
-				character_action_attack(&_player, &enemyThree);
+				character_action_attack(_player, &enemyThree);
 				break;
 			}
 			enemySelect = 0;
@@ -263,6 +270,87 @@ void enemy_Select(struct Character _player) {
 		}
 	}
 }
+void ally_Select(struct Character* _player) {
+
+	float time;
+	if (CP_Input_KeyTriggered(KEY_DOWN)) {
+
+		selectedAlly += 1;
+		upDown = 1;
+	}
+	else if (CP_Input_KeyTriggered(KEY_UP)) {
+
+		selectedAlly -= 1;
+		upDown = -1;
+	}
+
+
+	switch (selectedAlly)
+	{
+	case 1:
+		if (playerOne.health < 1) {
+			selectedAlly += upDown;
+			break;
+		}
+		characterSelectY = playerOne.yPosition;
+		characterSelectX = playerOne.xPosition;
+		break;
+	case 2:
+		if (playerTwo.health < 1) {
+			selectedAlly += upDown;
+			break;
+		}
+		characterSelectY = playerTwo.yPosition;
+		characterSelectX = playerTwo.xPosition;
+		break;
+	case 3:
+		if (playerThree.health < 1) {
+			selectedAlly += upDown;
+			break;
+		}
+		characterSelectY = playerThree.yPosition;
+		characterSelectX = playerThree.xPosition;
+		break;
+	case 4:
+		selectedAlly = 1;
+		break;
+	case 0:
+		selectedAlly = 3;
+		break;
+	}
+
+
+	if (delay) {
+		time = CP_System_GetSeconds();
+		delay = 0;
+	}
+	else
+		time = 0;
+	if (CP_System_GetSeconds() - time > 0.5) {
+
+		if (CP_Input_KeyTriggered(KEY_ENTER)) {
+			switch (selectedAlly) {
+			case 1:
+				character_action_heal(_player, &playerOne);
+				break;
+			case 2:
+				character_action_heal(_player, &playerTwo);
+				break;
+			case 3:
+				character_action_heal(_player, &playerThree);
+				break;
+			}
+			allySelect = 0;
+			characterTurn += 1;
+		}
+	}
+}
+
+
+
+
+
+
 
 void enemy_Turn(struct Character _enemy) {
 
@@ -304,7 +392,8 @@ void enemy_Turn(struct Character _enemy) {
 	characterTurn += 1;
 	actionSelect = 1;
 }
-void player_Turn(struct Character _character) {
+
+void player_Turn(struct Character* _character) {
 
 	switch (characterTurn) {
 	case 1:
@@ -345,13 +434,13 @@ void player_Turn(struct Character _character) {
 		CP_Font_DrawText("ATTACK", 100, 100);
 		CP_Font_DrawText("BACK STAB", 100, 200);
 		CP_Font_DrawText("STEALTH", 100, 300);
-
+		break;
 	}
 
 	if (actionSelect) {
 
 		buttonSelectOpacity = 255;
-		button_Select(selectButtonY);
+		button_Select(_character);
 		CP_Image_Draw(CP_Image_Load("./Assets/button_select.png"), 100, selectButtonY, 128 * 1.5, 128 * 1.5, 255);
 		buttonSelectOpacity = 0;
 	}
@@ -363,63 +452,44 @@ void player_Turn(struct Character _character) {
 		enemySelectOpacity = 0;
 	}
 
+	if (allySelect) {
+		enemySelectOpacity = 255;
+		ally_Select(_character);
+		CP_Image_Draw(CP_Image_Load("./Assets/character_select.png"), characterSelectX, characterSelectY, 128 * 1.5, 128 * 1.5, 255);
+		enemySelectOpacity = 0;
+
+	}
+
 }
 
 
 
-void character_action_heal(struct Character* _characterHealer, struct Character* _characterHealed) {
-	_characterHealed->health += (rand() % ((5 + _characterHealer->attackDamage) - _characterHealer->attackDamage) + _characterHealer->attackDamage);
-	_characterHealer->mana -= 20;
-	characterTurn += 1;
-}
 
 void draw_characters() {
 	if (playerOne.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), playerOne.xPosition, playerOne.yPosition, 256, 256, 255);
 	}
-	else if (characterTurn == 1) {
-		//characterTurn += 1;
 
-	}
 	if (playerTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), playerTwo.xPosition, playerTwo.yPosition, 256, 256, 255);
 	}
-	else if (characterTurn == 3) {
-		//characterTurn += 1;
 
-	}
 	if (playerThree.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, 106, 255);
-	}
-	else if (characterTurn == 5) {
-		//characterTurn += 1;
-
 	}
 
 	if (enemyOne.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyOne.xPosition, enemyOne.yPosition, 256, 256, 255);
 	}
-	else if (characterTurn == 2) {
-		//characterTurn += 1;
 
-
-	}
 	if (enemyTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyTwo.xPosition, enemyTwo.yPosition, 256, 256, 255);
 	}
-	else if (characterTurn == 4) {
-		//characterTurn += 1;
 
-
-	}
 	if (enemyThree.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyThree.xPosition, enemyThree.yPosition, 256, 256, 255);
 	}
-	else if (characterTurn == 6) {
-		//characterTurn += 1;
 
-
-	}
 }
 
 
@@ -431,7 +501,7 @@ void turn_manager() {
 
 	switch (characterTurn) {
 	case 1:
-		player_Turn(playerOne);
+		player_Turn(&playerOne);
 
 		break;
 	case 2:
@@ -439,7 +509,7 @@ void turn_manager() {
 
 		break;
 	case 3:
-		player_Turn(playerTwo);
+		player_Turn(&playerTwo);
 
 		break;
 	case 4:
@@ -447,8 +517,9 @@ void turn_manager() {
 
 		break;
 	case 5:
-		player_Turn(playerThree);
+		player_Turn(&playerThree);
 
+		break;
 	case 6:
 		enemy_Turn(enemyThree);
 
@@ -467,7 +538,7 @@ void debug() {
 	CP_Settings_TextSize(30);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
 	char buffer[50] = { 0 };
-	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank mana: %d", playerOne.health, playerOne.mana);
+	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank def: %.2f", playerOne.health, playerOne.defense);
 	CP_Font_DrawText(buffer, 10.f, 400);
 	sprintf_s(buffer, _countof(buffer), "wizard health: %d\nwizard mana: %d", playerTwo.health, playerTwo.mana);
 	CP_Font_DrawText(buffer, 10.f, 450);
@@ -479,7 +550,7 @@ void debug() {
 	CP_Font_DrawText(buffer, 10.f, 600);
 	sprintf_s(buffer, _countof(buffer), "enemy 3 health: %d\nenemy 2 mana: %d", enemyThree.health, enemyThree.mana);
 	CP_Font_DrawText(buffer, 10.f, 650);
-	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nactionSelect: %d", characterTurn, enemyTurn, actionSelect);
+	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nactionSelect: %d", characterTurn, enemyTurn, selectedAction);
 	CP_Font_DrawText(buffer, 10.f, 700);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
