@@ -18,12 +18,12 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "character_functions.h"
+#include "gamestate_gameover.h"
 
 
-
-struct Character playerOne = { "Tank", 100, 120, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
-struct Character playerTwo = { "Wizard", 70, 80, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
-struct Character playerThree = { "Rogue", 70, 90, 50, 50, 0, .1f, 5, 600, 600, 0, 1 }; // rogue
+struct Character playerOne = { "Tank", 100, 100, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
+struct Character playerTwo = { "Wizard", 70, 70, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
+struct Character playerThree = { "Rogue", 70, 70, 50, 50, 0, .1f, 5, 600, 600, 0, 1 }; // rogue
 
 struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 5, 900, 200, 0, 1 }; // enemy 1
 struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 5, 1000, 400, 0, 1 }; // enemy 2
@@ -59,11 +59,14 @@ int selectedAlly;
 int battleCompleted = 0;
 int gameLost;
 
+int buried;
+
+
 
 
 void button_Select(struct Character* _character); // function declerations
 void enemy_Select(struct Character* _player);
-void enemy_Turn(struct Character _enemy);
+void enemy_Turn(struct Character* _enemy);
 void player_Turn(struct Character* _character);
 void draw_characters();
 
@@ -88,7 +91,7 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	actionSelect = 1;
 	enemySelect = 0;
 	enemyTurn = 0;
-	characterSelectY = (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4);
+	characterSelectY = (float)CP_System_GetWindowHeight() / 2 - ((float)CP_System_GetWindowHeight() / 4); // Initial positions for character selection
 	characterSelectX = (float)CP_System_GetWindowWidth() / 2 + (float)CP_System_GetWindowWidth() / 4;
 	selectedEnemy = 1;
 	selectedAction = 1;
@@ -98,24 +101,34 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	allySelect = 0;
 	selectedAlly = 1;
 	gameLost = 0;
+	buried = 0;
+
 }
 
 void gamestate_fight_update(void) // update function (60 fps)
 {
-	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
-	draw_characters();
-
-	turn_manager();
-
-	debug();
-
-	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) {
+	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) { // If battle won, battle Completed +=1
 		battleCompleted += 1;
 	}
-	if (!playerOne.alive && !playerTwo.alive && !playerThree.alive) {
+	if (playerOne.alive == 0 && playerTwo.alive == 0 && playerThree.alive == 0) { // every dead means battle lost
+
 		gameLost = 1;
+
 	}
+
+	if (gameLost == 1) { // If game lost, set gamestate to game over screen
+
+		CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
+	}
+
+	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
+
+	draw_characters(); // draws characters
+
+	turn_manager(); // manages character turns
+
+	debug();
 
 
 
@@ -173,8 +186,7 @@ void button_Select(struct Character* _character) {
 			}
 			if (_character == &playerThree) {// rogue special TBD
 				character_action_bury(_character);
-				//int buried = 1;
-
+				buried = 1;
 				characterTurn += 1;
 			}
 
@@ -209,6 +221,9 @@ void button_Select(struct Character* _character) {
 			selectedEnemy = 2;
 		else if (enemyTwo.health < 1)
 			selectedEnemy += 1;
+		if (selectedEnemy > 3) {
+			selectedEnemy = 3;
+		}
 	}
 
 }
@@ -274,7 +289,10 @@ void enemy_Select(struct Character* _player) {
 			switch (selectedEnemy) {
 			case 1:
 				if (_player == &playerThree) {
-					character_action_backstab(_player, &enemyOne, 1);
+					if (buried)
+						character_action_backstab(_player, &enemyOne, 1);
+					buried = 0;
+					_player->defense = 0.1f;
 				}
 				else {
 					character_action_attack(_player, &enemyOne);
@@ -283,7 +301,10 @@ void enemy_Select(struct Character* _player) {
 				break;
 			case 2:
 				if (_player == &playerThree) {
-					character_action_backstab(_player, &enemyTwo, 1);
+					if (buried)
+						character_action_backstab(_player, &enemyTwo, 1);
+					buried = 0;
+					_player->defense = 0.1f;
 				}
 				else {
 					character_action_attack(_player, &enemyTwo);
@@ -292,7 +313,10 @@ void enemy_Select(struct Character* _player) {
 				break;
 			case 3:
 				if (_player == &playerThree) {
-					character_action_backstab(_player, &enemyThree, 1);
+					if (buried)
+						character_action_backstab(_player, &enemyThree, 1);
+					buried = 0;
+					_player->defense = 0.1f;
 				}
 				else {
 					character_action_attack(_player, &enemyThree);
@@ -382,7 +406,7 @@ void ally_Select(struct Character* _player) {
 }
 
 
-void enemy_Turn(struct Character _enemy) {
+void enemy_Turn(struct Character* _enemy) {
 
 	enemyActionChoice = (rand() % 2) + 1;
 
@@ -400,13 +424,13 @@ void enemy_Turn(struct Character _enemy) {
 
 		switch (enemyAttackChoice) {
 		case 1: 
-			character_action_attack(&_enemy, &playerOne);
+			character_action_attack(_enemy, &playerOne);
 			break;
 		case 2:
-			character_action_attack(&_enemy, &playerTwo);
+			character_action_attack(_enemy, &playerTwo);
 			break;
 		case 3:
-			character_action_attack(&_enemy, &playerThree);
+			character_action_attack(_enemy, &playerThree);
 			break;
 		}
 
@@ -423,13 +447,13 @@ void enemy_Turn(struct Character _enemy) {
 
 		switch (enemyHealChoice) {
 		case 1:
-			character_action_heal(&_enemy, &enemyOne);
+			character_action_heal(_enemy, &enemyOne);
 			break;
 		case 2:
-			character_action_heal(&_enemy, &enemyTwo);
+			character_action_heal(_enemy, &enemyTwo);
 			break;
 		case 3:
-			character_action_heal(&_enemy, &enemyThree);
+			character_action_heal(_enemy, &enemyThree);
 			break;
 		}
 	}
@@ -556,7 +580,7 @@ void turn_manager() {
 			break;
 		}
 		else
-			enemy_Turn(enemyOne);
+			enemy_Turn(&enemyOne);
 
 		break;
 	case 3:
@@ -577,7 +601,7 @@ void turn_manager() {
 			break;
 		}
 		else 
-			enemy_Turn(enemyTwo);
+			enemy_Turn(&enemyTwo);
 
 		break;
 	case 5:
@@ -599,7 +623,7 @@ void turn_manager() {
 			break;
 		}
 		else 
-			enemy_Turn(enemyThree);
+			enemy_Turn(&enemyThree);
 
 		break;
 	default:
@@ -613,23 +637,25 @@ void turn_manager() {
 void debug() {
 	CP_Settings_TextSize(30);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
-	char buffer[50] = { 0 };
+	char buffer[80] = { 0 };
 	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank def: %.2f", playerOne.health, playerOne.defense);
 	CP_Font_DrawText(buffer, 10.f, 400);
 	sprintf_s(buffer, _countof(buffer), "wizard health: %d\nwizard mana: %d", playerTwo.health, playerTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 450);
+	CP_Font_DrawText(buffer, 10.f, 440);
 	sprintf_s(buffer, _countof(buffer), "rogue health: %d\nrogue mana: %d", playerThree.health, playerThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 500);
+	CP_Font_DrawText(buffer, 10.f, 480);
 	sprintf_s(buffer, _countof(buffer), "enemy 1 health: %d\nenemy 1 mana: %d", enemyOne.health, enemyOne.mana);
-	CP_Font_DrawText(buffer, 10.f, 550);
+	CP_Font_DrawText(buffer, 10.f, 520);
 	sprintf_s(buffer, _countof(buffer), "enemy 2 health: %d\nenemy 2 mana: %d", enemyTwo.health, enemyTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 600);
+	CP_Font_DrawText(buffer, 10.f, 560);
 	sprintf_s(buffer, _countof(buffer), "enemy 3 health: %d\nenemy 2 mana: %d", enemyThree.health, enemyThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 650);
+	CP_Font_DrawText(buffer, 10.f, 600);
 	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nSelectAct: %d", characterTurn, enemyTurn, selectedAction);
-	CP_Font_DrawText(buffer, 10.f, 700);
-	sprintf_s(buffer, _countof(buffer), "Action: %d", actionSelect);
-	CP_Font_DrawText(buffer, 10.f, 750);
+	CP_Font_DrawText(buffer, 10.f, 640);
+	sprintf_s(buffer, _countof(buffer), "Action: %d\nGameOver: %d\nAlly: %d\n enemysel: %d", actionSelect, gameLost, allySelect, selectedEnemy);
+	CP_Font_DrawText(buffer, 10.f, 680);
+	sprintf_s(buffer, _countof(buffer), "player1 alive: %d\nplayer2 alive: %d\nplayer3 alive: %d", playerOne.alive, playerTwo.alive, playerThree.alive);
+	CP_Font_DrawText(buffer, 10.f, 720);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 

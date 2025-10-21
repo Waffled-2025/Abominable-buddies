@@ -17,3 +17,4 @@ void gamestate_fight_init(void);
 void gamestate_fight_update(void);
 void gamestate_fight_exit(void);
 int battleCompleted;
+int gameLost;
