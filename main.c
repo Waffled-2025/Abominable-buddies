@@ -15,6 +15,7 @@
 #include "cprocessing.h"
 #include "gamestate_splashscreen.h"
 #include "gamestate_fight.h"
+#include "gamestate_gameover.h"
 
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
