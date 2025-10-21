@@ -75,4 +75,12 @@ void character_action_meditate(struct Character* _character) { // m a n a & m a 
 	if (_character->mana > _character->maxMana)
 		_character->mana = _character->maxMana;
 }
-
+void character_action_bury(struct Character* _character) {
+	_character->defense = 1;
+	
+}
+void character_action_backstab(struct Character* _character, struct Character* _enemy, int buried) {
+	if (buried == 1) {
+		_enemy->health -= 30;
+	}
+}
