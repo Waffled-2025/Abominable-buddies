@@ -53,7 +53,7 @@ void gamestate_splashscreen_update(void)
 		scale += 0.05f;
 		time = CP_System_GetSeconds();
 	}
-	else if (CP_System_GetSeconds() > 8) {
+	else if (CP_System_GetSeconds() > 10) {
 		CP_Engine_SetNextGameState(gamestate_menu_init, gamestate_menu_update, gamestate_menu_exit);
 
 	}
