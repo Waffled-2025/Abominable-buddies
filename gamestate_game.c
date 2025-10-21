@@ -15,7 +15,9 @@
 #include "gamestate_game.h"
 #include "gamestate_buttons.h"
 #include "gamestate_fight.h"
+#include "charactermenu_functions.h"
 CP_Image Level1Background;
+int menu;
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
@@ -24,6 +26,7 @@ void gamestate_game_init(void)
 	 Level1Background = CP_Image_Load ("image_2025-10-17_132724709.png");
 	CP_System_SetWindowSize(1200, 800);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
+	menu = 0;
 	
 	
 }
@@ -93,14 +96,16 @@ void gamestate_game_update(void)
 	CP_Font_DrawText("CHARACTERS", (float)CP_System_GetWindowWidth() / 2.f+400, ((float)CP_System_GetWindowHeight() / 3.f) + 350);
 	button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), CP_System_GetWindowWidth() / 4.f, CP_System_GetWindowHeight() / 8.f, (float)CP_System_GetWindowWidth() / 2.f+400, ((float)CP_System_GetWindowHeight() / 3.f) + 350);
 	if (button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), CP_System_GetWindowWidth() / 4.f, CP_System_GetWindowHeight() / 8.f, (float)CP_System_GetWindowWidth() / 2.f+400, ((float)CP_System_GetWindowHeight() / 3.f) + 350) && CP_Input_MouseClicked()) {
-		//call for character function thing when made
+		menu = 1;
 	}
 	if (button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), CP_System_GetWindowWidth() / 4.f, CP_System_GetWindowHeight() / 8.f, (float)CP_System_GetWindowWidth() / 2.f+400, ((float)CP_System_GetWindowHeight() / 3.f) + 350)) {
 		CP_Settings_Fill(CP_Color_Create(3, 186, 252, 255));
 		CP_Font_DrawText("CHARACTERS", (float)CP_System_GetWindowWidth() / 2.f+400, ((float)CP_System_GetWindowHeight() / 3.f) + 350);
 	}
 
-
+	if (menu == 1) {
+		charactermenu();
+	}
 
 
 

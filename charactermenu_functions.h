@@ -13,6 +13,4 @@
 
 #pragma once
 
-void charactermenu_functions_init(void);
-void charactermenu_functions_update(void);
-void charactermenu_functions_exit(void);
+void charactermenu(void);
