@@ -21,9 +21,9 @@
 
 
 
-struct Character playerOne = { "Tank", 120, 120, 30, 30, 15, .3f, 5, 600, 200, 0, 1 }; // tank
-struct Character playerTwo = { "Wizard", 80, 80, 100, 100, 50, .0f, 10, 500, 400, 0, 1 }; // wiz
-struct Character playerThree = { "Rogue", 90, 90, 50, 50, 0, .1f, 15, 600, 600, 0, 1 }; // rogue
+struct Character playerOne = { "Tank", 100, 120, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
+struct Character playerTwo = { "Wizard", 70, 80, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
+struct Character playerThree = { "Rogue", 70, 90, 50, 50, 0, .1f, 5, 600, 600, 0, 1 }; // rogue
 
 struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 5, 900, 200, 0, 1 }; // enemy 1
 struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 5, 1000, 400, 0, 1 }; // enemy 2
@@ -171,7 +171,10 @@ void button_Select(struct Character* _character) {
 			if (_character == &playerTwo) { // wiz special is heal ally
 				allySelect = 1;
 			}
-			if (_character == &playerThree) { // rogue special TBD
+			if (_character == &playerThree) {// rogue special TBD
+				character_action_bury(_character);
+				//int buried = 1;
+
 				characterTurn += 1;
 			}
 
@@ -179,15 +182,18 @@ void button_Select(struct Character* _character) {
 		case 3: // special 2
 			if (_character == &playerOne) { // tank regens 5 health and mana
 				character_action_rest(_character);
+				characterTurn += 1;
+
 			}
 			if (_character == &playerTwo) { // wiz regens a lot of mana
 				character_action_meditate(_character);
+				characterTurn += 1;
+
 			}
 			if (_character == &playerThree) { // rogue TBD
-
+				enemySelect = 1;
 			}
 
-			characterTurn += 1;
 
 			break;
 		}
@@ -267,13 +273,31 @@ void enemy_Select(struct Character* _player) {
 		if (CP_Input_KeyTriggered(KEY_ENTER)) {
 			switch (selectedEnemy) {
 			case 1:
-				character_action_attack(_player, &enemyOne);
+				if (_player == &playerThree) {
+					character_action_backstab(_player, &enemyOne, 1);
+				}
+				else {
+					character_action_attack(_player, &enemyOne);
+
+				}
 				break;
 			case 2:
-				character_action_attack(_player, &enemyTwo);
+				if (_player == &playerThree) {
+					character_action_backstab(_player, &enemyTwo, 1);
+				}
+				else {
+					character_action_attack(_player, &enemyTwo);
+
+				}
 				break;
 			case 3:
-				character_action_attack(_player, &enemyThree);
+				if (_player == &playerThree) {
+					character_action_backstab(_player, &enemyThree, 1);
+				}
+				else {
+					character_action_attack(_player, &enemyThree);
+					
+				}
 				break;
 			}
 			enemySelect = 0;
@@ -452,8 +476,8 @@ void player_Turn(struct Character* _character) {
 
 		CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
 		CP_Font_DrawText("ATTACK", 100, 100);
-		CP_Font_DrawText("BACK STAB", 100, 200);
-		CP_Font_DrawText("STEALTH", 100, 300);
+		CP_Font_DrawText("BURY", 100, 200);
+		CP_Font_DrawText("BACK STAB", 100, 300);
 		break;
 	}
 

@@ -34,3 +34,5 @@ void character_action_heal(struct Character* _characterHealer, struct Character*
 void character_action_rest(struct Character* _character);
 void character_action_defend(struct Character* _character);
 void character_action_meditate(struct Character* _character);
+void character_action_bury(struct Character* _character);
+void character_action_backstab(struct Character* _character, struct Character* _enemy, int buried);
