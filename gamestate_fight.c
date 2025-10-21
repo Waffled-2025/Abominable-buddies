@@ -71,7 +71,7 @@ void enemy_Turn(struct Character* _enemy);
 void player_Turn(struct Character* _character);
 void draw_characters();
 
-//void resetCharacters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);
+void reset_characters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);
 
 void turn_manager();
 
@@ -654,9 +654,19 @@ void turn_manager() {
 	}
 }
 
-//void resetCharacters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree) {
-//	_playerOne
-//}
+void reset_characters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree) {
+
+	playerOne.health = _playerOne->health; playerTwo.health = _playerTwo->health; playerThree.health = _playerThree->health;
+	playerOne.alive = 1; playerTwo.alive = 1; playerThree.alive = 1;
+	playerOne.attackDamage = _playerOne->attackDamage; playerTwo.attackDamage = _playerTwo->attackDamage; playerThree.attackDamage = _playerThree->attackDamage;
+	playerOne.defended = 0; playerTwo.defended = 0; playerThree.defended = 0;
+	playerOne.defense = _playerOne->defense; playerTwo.defense = _playerTwo->defense; playerThree.defense = _playerThree->defense;
+	playerOne.mana = _playerOne->mana; playerTwo.mana = _playerTwo->mana; playerThree.mana = _playerThree->mana;
+	playerOne.manaRegen = _playerOne->manaRegen; playerTwo.manaRegen = _playerTwo->manaRegen; playerThree.manaRegen = _playerThree->manaRegen;
+	playerOne.maxHealth = _playerOne->maxHealth; playerTwo.maxHealth = _playerTwo->maxHealth; playerThree.maxHealth = _playerThree->maxHealth;
+	playerOne.maxMana = _playerOne->maxMana; playerTwo.maxMana = _playerTwo->maxMana; playerThree.maxMana = _playerThree->maxMana;
+
+}
 
 
 void debug() {
