@@ -81,5 +81,9 @@ void character_action_bury(struct Character* _character) {
 void character_action_backstab(struct Character* _character, struct Character* _enemy, int buried) {
 	if (buried == 1) {
 		_enemy->health -= 30;
+		if (_enemy->health < 0) { // Making sure health doesnt go into negatives
+			_enemy->health = 0;
+		}
+
 	}
 }
