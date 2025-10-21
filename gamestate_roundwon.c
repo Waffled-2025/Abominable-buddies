@@ -12,6 +12,7 @@
 //---------------------------------------------------------
 
 #include "cprocessing.h"
+#include "gamestate_roundwon.h"
 #include "gamestate_gameover.h"
 #include "gamestate_buttons.h"
 #include "gamestate_fight.h"
@@ -20,23 +21,22 @@
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
-void gamestate_gameover_init(void)
+void gamestate_roundwon_init(void)
 {
 	CP_System_SetWindowSize(1200, 800);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_TextSize(150);
-
 	// initialize variables and CProcessing settings for this gamestate
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the update function
 // this function will be called repeatedly every frame
-void gamestate_gameover_update(void)
+void gamestate_roundwon_update(void)
 {
 	CP_Settings_TextSize(150);
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 130, 255, 100));
-	CP_Font_DrawText("GAME OVER", 600, 100);
+	CP_Font_DrawText("ROUND WON", 600, 100);
 
 	if (button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 500, 125, 600, 300)) {
 		CP_Settings_Fill(CP_Color_Create(255, 0, 50, 255));
@@ -51,7 +51,7 @@ void gamestate_gameover_update(void)
 	CP_Settings_TextSize(75);
 	CP_Graphics_DrawRect(600, 300, 500, 125);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-	CP_Font_DrawText("RESTART", 600, 300);
+	CP_Font_DrawText("CONTINUE", 600, 300);
 
 	if (button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 500, 125, 600, 450)) {
 		CP_Settings_Fill(CP_Color_Create(255, 0, 50, 255));
@@ -80,18 +80,12 @@ void gamestate_gameover_update(void)
 	CP_Graphics_DrawRect(600, 600, 500, 125);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	CP_Font_DrawText("QUIT", 600, 600);
-
-
-
-
-
-
 	// check input, update simulation, render etc.
 }
 
 // use CP_Engine_SetNextGameState to specify this function as the exit function
 // this function will be called once just before leaving the current gamestate
-void gamestate_gameover_exit(void)
+void gamestate_roundwon_exit(void)
 {
 	// shut down the gamestate and cleanup any dynamic memory
 }

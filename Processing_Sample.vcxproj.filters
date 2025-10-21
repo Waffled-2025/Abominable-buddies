@@ -9,6 +9,7 @@
     <ClCompile Include="gamestate_splashscreen.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="character_functions.c" />
+    <ClCompile Include="gamestate_roundwon.c" />
     <ClCompile Include="charactermenu_functions.c" />
   </ItemGroup>
   <ItemGroup>
@@ -33,7 +34,10 @@
     <ClInclude Include="gamestate_splashscreen.h">
       <Filter>header files</Filter>
     </ClInclude>
-    <ClInclude Include="charactermenu_functions.h" />
+        <ClInclude Include="gamestate_roundwon.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+        <ClInclude Include="charactermenu_functions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="header files">
