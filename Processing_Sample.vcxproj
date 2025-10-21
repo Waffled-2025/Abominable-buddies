@@ -195,6 +195,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="charactermenu_functions.c" />
+    <ClCompile Include="characterUI.c" />
     <ClCompile Include="character_functions.c" />
     <ClCompile Include="gamestate_buttons.c" />
     <ClCompile Include="gamestate_fight.c" />
@@ -207,6 +208,7 @@ xcopy "$(ProjectDir)Assets\*" "$(OutDir)Assets\" /s /r /y /q</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="charactermenu_functions.h" />
+    <ClInclude Include="characterUI.h" />
     <ClInclude Include="character_functions.h" />
     <ClInclude Include="gamestate_buttons.h" />
     <ClInclude Include="gamestate_fight.h" />

@@ -20,7 +20,7 @@
 #include "character_functions.h"
 #include "gamestate_gameover.h"
 #include "gamestate_roundwon.h"
-
+#include "characterUI.h"
 
 struct Character playerOne = { "Tank", 100, 100, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
 struct Character playerTwo = { "Wizard", 70, 70, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
@@ -133,6 +133,8 @@ void gamestate_fight_update(void) // update function (60 fps)
 	draw_characters(); // draws characters
 
 	turn_manager(); // manages character turns
+
+	UI_healthbar(&playerOne);
 
 	debug();
 
@@ -691,7 +693,7 @@ void debug() {
 	CP_Font_DrawText(buffer, 10.f, 610);
 	sprintf_s(buffer, _countof(buffer), "player1 alive: %d\nplayer2 alive: %d\nplayer3 alive: %d", playerOne.alive, playerTwo.alive, playerThree.alive);
 	CP_Font_DrawText(buffer, 10.f, 640);
-	sprintf_s(buffer, _countof(buffer), "tank def: %.2f\nwiz def: %.2f\nrogue def: %.2f", playerOne.defense, playerTwo.defense, playerThree.defense);
+	sprintf_s(buffer, _countof(buffer), "tank def: %d\nwiz def: %d\nrogue def: %d", playerOne.defended, playerTwo.defended, playerThree.defended);
 	CP_Font_DrawText(buffer, 10.f, 670);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);

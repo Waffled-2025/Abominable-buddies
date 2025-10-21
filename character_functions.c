@@ -12,38 +12,20 @@
 //---------------------------------------------------------
 
 #include "cprocessing.h"
-#include "gamestate_template.h"
+#include "character_functions.h"
 #include "math.h"
 #include "stdlib.h"
 
-struct Character { // Character template for player and enemy characters
-	char name[50];
 
-	int health;
-	int maxHealth;
-
-	int mana;
-	int maxMana;
-	int manaRegen;
-
-	float defense;
-
-	int attackDamage;
-
-	float xPosition;
-	float yPosition;
-
-	int defended;
-
-	int alive;
-};
 
 void character_action_attack(struct Character* _character1, struct Character* _character2) { // function for attacks, character1 damages character2 for (attackDmg) up to (attackDmg+10)
-	_character2->health -= (int)((float)((rand() % ((10 + _character1->attackDamage) - _character1->attackDamage) + _character1->attackDamage)) * (1 - _character2->defense));
 	if (_character2->defended) { // Resetting defense
 		_character2->defended = 0;
-		_character2->defense -= 0.5;
+
 	}
+	else 
+		_character2->health -= (int)((float)((rand() % ((10 + _character1->attackDamage) - _character1->attackDamage) + _character1->attackDamage)) * (1 - _character2->defense));
+
 	if (_character2->health < 0) { // Making sure health doesnt go into negatives
 		_character2->health = 0;
 	}
@@ -65,9 +47,7 @@ void character_action_rest(struct Character* _character) {
 		_character->mana = _character->maxMana;
 }
 void character_action_defend(struct Character* _character) { // Increases character defense by 50%
-	if (!_character->defended)
-		
-		_character->defense += 0.5;
+	if (!_character->defended)		
 		_character->defended = 1;
 }
 void character_action_meditate(struct Character* _character) { // m a n a & m a g i c
