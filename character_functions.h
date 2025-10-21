@@ -14,16 +14,20 @@
 #pragma once
 struct Character { // Character template for player and enemy characters
 	char name[50];
-	//CP_Image characterSprite;
+
 	int health;
+	int maxHealth;
 	int mana;
+	int maxMana;
 	int manaRegen;
 	float defense;
 	int attackDamage;
 	float xPosition;
 	float yPosition;
 	int defended;
+	int alive;
 };
+
 
 void character_action_attack(struct Character* _character1, struct Character* _character2);
 void character_action_heal(struct Character* _characterHealer, struct Character* _characterHealed);

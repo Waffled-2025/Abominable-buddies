@@ -21,16 +21,16 @@
 
 
 
-struct Character playerOne = { "Tank", 120, 30, 15, .3f, 5, 600, 200, 0 };
-struct Character playerTwo = { "Wizard", 80, 100, 50, .0f, 10, 500, 400, 0 }; 
-struct Character playerThree = { "Rogue", 90, 50, 0, .1f, 15, 600, 600, 0 };
+struct Character playerOne = { "Tank", 120, 120, 30, 30, 15, .3f, 5, 600, 200, 0, 1 }; // tank
+struct Character playerTwo = { "Wizard", 80, 80, 100, 100, 50, .0f, 10, 500, 400, 0, 1 }; // wiz
+struct Character playerThree = { "Rogue", 90, 90, 50, 50, 0, .1f, 15, 600, 600, 0, 1 }; // rogue
 
-struct Character enemyOne = { "Stupid idiot 1", 100, 100, 25, 0.2f, 5, 900, 200, 0 };
-struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 25, 0.2f, 5, 1000, 400, 0 };
-struct Character enemyThree = { "Stupid idiot 3", 100, 100, 25, 0.2f, 5, 900, 600, 0 };
+struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 5, 900, 200, 0, 1 }; // enemy 1
+struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 5, 1000, 400, 0, 1 }; // enemy 2
+struct Character enemyThree = { "Stupid idiot 3", 100, 100, 100, 100, 25, 0.2f, 5, 900, 600, 0, 1 }; // enemy 3
 
 
-float selectButtonY;
+float selectButtonY; // variable declarations
 int buttonSelectOpacity;
 
 float characterSelectY;
@@ -58,21 +58,21 @@ int selectedAlly;
 
 
 
-void button_Select(struct Character* _character);
+void button_Select(struct Character* _character); // function declerations
 void enemy_Select(struct Character* _player);
 void enemy_Turn(struct Character _enemy);
 void player_Turn(struct Character* _character);
 void draw_characters();
 
-void turn_manager();
 
+void turn_manager();
 
 void debug();
 
 
 
 
-void gamestate_fight_init(void)
+void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 {
 	CP_System_SetWindowSize(1200, 800);
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
@@ -97,7 +97,7 @@ void gamestate_fight_init(void)
 
 }
 
-void gamestate_fight_update(void)
+void gamestate_fight_update(void) // update function (60 fps)
 {
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
@@ -106,6 +106,9 @@ void gamestate_fight_update(void)
 	turn_manager();
 
 	debug();
+
+
+
 
 
 }
@@ -120,7 +123,7 @@ void button_Select(struct Character* _character) {
 
 
 
-	if (CP_Input_KeyTriggered(KEY_DOWN)) {
+	if (CP_Input_KeyTriggered(KEY_DOWN)) { // On key down increase selected action (1=attack,2=special1,3=special2)
 		if (selectButtonY < 300) {
 			selectButtonY += 100;
 			selectedAction += 1;
@@ -132,7 +135,7 @@ void button_Select(struct Character* _character) {
 		}
 
 	}
-	if (CP_Input_KeyTriggered(KEY_UP)) {
+	if (CP_Input_KeyTriggered(KEY_UP)) { // decrease selected action
 		if (selectButtonY > 100) {
 			selectButtonY -= 100;
 			selectedAction -= 1;
@@ -147,32 +150,32 @@ void button_Select(struct Character* _character) {
 	}
 
 
-	if (CP_Input_KeyTriggered(KEY_ENTER)) {
+	if (CP_Input_KeyTriggered(KEY_ENTER)) { // When player presses enter, lock in selected action and do correlating stuff
 		switch (selectedAction) {
-		case 1:
+		case 1: // Attack
 			enemySelect = 1;
 			break;
-		case 2:
-			if (_character == &playerOne) {
+		case 2: // special 1
+			if (_character == &playerOne) { // tank special is increase defense
 				character_action_defend(_character);
 				characterTurn += 1;
 			}
-			if (_character == &playerTwo) {
+			if (_character == &playerTwo) { // wiz special is heal ally
 				allySelect = 1;
 			}
-			if (_character == &playerThree) {
+			if (_character == &playerThree) { // rogue special TBD
 				characterTurn += 1;
 			}
 
 			break;
-		case 3:
-			if (_character == &playerOne) {
+		case 3: // special 2
+			if (_character == &playerOne) { // tank regens 5 health and mana
 				character_action_rest(_character);
 			}
-			if (_character == &playerTwo) {
+			if (_character == &playerTwo) { // wiz regens a lot of mana
 				character_action_meditate(_character);
 			}
-			if (_character == &playerThree) {
+			if (_character == &playerThree) { // rogue TBD
 
 			}
 
@@ -182,7 +185,7 @@ void button_Select(struct Character* _character) {
 		}
 		actionSelect = 0;
 		delay = 1;
-		if (enemyOne.health > 0) {
+		if (enemyOne.health > 0) { // Setting up the enemy select bar for next aciton
 			selectedEnemy = 1;
 			return;
 		}
@@ -198,7 +201,7 @@ void button_Select(struct Character* _character) {
 void enemy_Select(struct Character* _player) {
 
 	float time;
-	if (CP_Input_KeyTriggered(KEY_DOWN)) {
+	if (CP_Input_KeyTriggered(KEY_DOWN)) { // Button selection
 
 		selectedEnemy += 1;
 		upDown = 1;
@@ -210,7 +213,7 @@ void enemy_Select(struct Character* _player) {
 	}
 
 
-	switch (selectedEnemy)
+	switch (selectedEnemy) 
 	{
 	case 1:
 		if (enemyOne.health < 1) {
@@ -347,11 +350,6 @@ void ally_Select(struct Character* _player) {
 }
 
 
-
-
-
-
-
 void enemy_Turn(struct Character _enemy) {
 
 	enemyActionChoice = (rand() % 2) + 1;
@@ -360,16 +358,23 @@ void enemy_Turn(struct Character _enemy) {
 	if (enemyActionChoice == 1) {
 
 		int enemyAttackChoice = (rand() % 3) + 1;
+		if (enemyAttackChoice == 1 && !playerOne.alive)
+			enemyAttackChoice += 1;
+		if (enemyAttackChoice == 2 && !playerTwo.alive)
+			enemyAttackChoice += 1;
+		if (enemyAttackChoice == 3 && !playerThree.alive)
+			enemyAttackChoice = 1;
+
 
 		switch (enemyAttackChoice) {
 		case 1: 
-			character_action_attack(&enemyOne, &playerOne);
+			character_action_attack(&_enemy, &playerOne);
 			break;
 		case 2:
-			character_action_attack(&enemyOne, &playerTwo);
+			character_action_attack(&_enemy, &playerTwo);
 			break;
 		case 3:
-			character_action_attack(&enemyOne, &playerThree);
+			character_action_attack(&_enemy, &playerThree);
 			break;
 		}
 
@@ -377,15 +382,22 @@ void enemy_Turn(struct Character _enemy) {
 	else if (enemyActionChoice == 2) {
 		int enemyHealChoice = (rand() % 3) + 1;
 
+		if (enemyHealChoice == 1 && !enemyOne.alive)
+			enemyHealChoice += 1;
+		if (enemyHealChoice == 2 && !enemyTwo.alive)
+			enemyHealChoice += 1;
+		if (enemyHealChoice == 3 && !enemyThree.alive)
+			enemyHealChoice = 1;
+
 		switch (enemyHealChoice) {
 		case 1:
-			character_action_heal(&enemyOne, &enemyOne);
+			character_action_heal(&_enemy, &enemyOne);
 			break;
 		case 2:
-			character_action_heal(&enemyOne, &enemyTwo);
+			character_action_heal(&_enemy, &enemyTwo);
 			break;
 		case 3:
-			character_action_heal(&enemyOne, &enemyThree);
+			character_action_heal(&_enemy, &enemyThree);
 			break;
 		}
 	}
@@ -462,9 +474,6 @@ void player_Turn(struct Character* _character) {
 
 }
 
-
-
-
 void draw_characters() {
 	if (playerOne.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), playerOne.xPosition, playerOne.yPosition, 256, 256, 255);
@@ -475,7 +484,7 @@ void draw_characters() {
 	}
 
 	if (playerThree.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, 106, 255);
+		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255);
 	}
 
 	if (enemyOne.health > 0) {
@@ -492,44 +501,79 @@ void draw_characters() {
 
 }
 
-
-
-
 void turn_manager() {
 
 
 
 	switch (characterTurn) {
 	case 1:
-		player_Turn(&playerOne);
+		if (playerOne.health < 1) {
+			characterTurn += 1;
+			playerOne.alive = 0;
+			break;
+		}
+		else 
+			player_Turn(&playerOne);
 
 		break;
 	case 2:
-		enemy_Turn(enemyOne);
+		if (enemyOne.health < 1) {
+			characterTurn += 1;
+			enemyOne.alive = 0;
+			actionSelect = 1;
+			break;
+		}
+		else
+			enemy_Turn(enemyOne);
 
 		break;
 	case 3:
-		player_Turn(&playerTwo);
+		if (playerTwo.health < 1) {
+			characterTurn += 1;
+			playerTwo.alive = 0;
+			break;
+		}
+		else 
+			player_Turn(&playerTwo);
 
 		break;
 	case 4:
-		enemy_Turn(enemyTwo);
+		if (enemyTwo.health < 1) {
+			enemyTwo.alive = 0;
+			characterTurn += 1;
+			actionSelect = 1;
+			break;
+		}
+		else 
+			enemy_Turn(enemyTwo);
 
 		break;
 	case 5:
-		player_Turn(&playerThree);
+		if (playerThree.health < 1) {
+			playerThree.alive = 0;
+			characterTurn += 1;
+			break;
+		}
+		else
+			player_Turn(&playerThree);
+
 
 		break;
 	case 6:
-		enemy_Turn(enemyThree);
+		if (enemyThree.health < 1) {
+			enemyThree.alive = 0;
+			characterTurn += 1;
+			actionSelect = 1;
+			break;
+		}
+		else 
+			enemy_Turn(enemyThree);
 
 		break;
 	default:
 		characterTurn = 1;
 	}
 }
-
-
 
 
 
@@ -550,8 +594,10 @@ void debug() {
 	CP_Font_DrawText(buffer, 10.f, 600);
 	sprintf_s(buffer, _countof(buffer), "enemy 3 health: %d\nenemy 2 mana: %d", enemyThree.health, enemyThree.mana);
 	CP_Font_DrawText(buffer, 10.f, 650);
-	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nactionSelect: %d", characterTurn, enemyTurn, selectedAction);
+	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nSelectAct: %d", characterTurn, enemyTurn, selectedAction);
 	CP_Font_DrawText(buffer, 10.f, 700);
+	sprintf_s(buffer, _countof(buffer), "Action: %d", actionSelect);
+	CP_Font_DrawText(buffer, 10.f, 750);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
