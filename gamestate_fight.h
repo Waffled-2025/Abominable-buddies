@@ -18,3 +18,4 @@ void gamestate_fight_update(void);
 void gamestate_fight_exit(void);
 int battleCompleted;
 int gameLost;
+//void resetCharacters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);

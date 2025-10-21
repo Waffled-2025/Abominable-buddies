@@ -19,6 +19,7 @@
 #include "stdio.h"
 #include "character_functions.h"
 #include "gamestate_gameover.h"
+#include "gamestate_roundwon.h"
 
 
 struct Character playerOne = { "Tank", 100, 100, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
@@ -70,6 +71,7 @@ void enemy_Turn(struct Character* _enemy);
 void player_Turn(struct Character* _character);
 void draw_characters();
 
+//void resetCharacters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);
 
 void turn_manager();
 
@@ -103,6 +105,8 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	gameLost = 0;
 	buried = 0;
 
+	
+
 }
 
 void gamestate_fight_update(void) // update function (60 fps)
@@ -110,6 +114,7 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) { // If battle won, battle Completed +=1
 		battleCompleted += 1;
+		CP_Engine_SetNextGameState(gamestate_roundwon_init, gamestate_roundwon_update, gamestate_roundwon_exit);
 	}
 	if (playerOne.alive == 0 && playerTwo.alive == 0 && playerThree.alive == 0) { // every dead means battle lost
 
@@ -121,6 +126,7 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 		CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
 	}
+
 
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
@@ -648,7 +654,9 @@ void turn_manager() {
 	}
 }
 
-
+//void resetCharacters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree) {
+//	_playerOne
+//}
 
 
 void debug() {
