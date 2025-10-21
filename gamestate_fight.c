@@ -56,7 +56,7 @@ int enemyActionChoice;
 int allySelect;
 int selectedAlly;
 
-int battleCompleted = 0;
+extern int battleCompleted = 0;
 
 
 

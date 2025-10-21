@@ -44,8 +44,8 @@ void game_exit(void)
 // CP_Engine_Run() is the core function that starts the simulation
 int main(void)
 {
-	//CP_Engine_SetNextGameState(gamestate_splashscreen_init, gamestate_splashscreen_update, gamestate_splashscreen_exit);
-	CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	CP_Engine_SetNextGameState(gamestate_splashscreen_init, gamestate_splashscreen_update, gamestate_splashscreen_exit);
+	//CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
 	CP_Engine_Run();
 	return 0;
 }
