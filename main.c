@@ -15,6 +15,7 @@
 #include "cprocessing.h"
 #include "gamestate_splashscreen.h"
 #include "gamestate_fight.h"
+#include "gamestate_gameover.h"
 
 
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
@@ -45,7 +46,8 @@ void game_exit(void)
 int main(void)
 {
 	//CP_Engine_SetNextGameState(gamestate_splashscreen_init, gamestate_splashscreen_update, gamestate_splashscreen_exit);
-	CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	//CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit); 
+	CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
 	CP_Engine_Run();
 	return 0;
 }
