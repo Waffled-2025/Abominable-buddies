@@ -56,7 +56,8 @@ int enemyActionChoice;
 int allySelect;
 int selectedAlly;
 
-extern int battleCompleted = 0;
+int battleCompleted = 0;
+int gameLost;
 
 
 
@@ -96,7 +97,7 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	upDown = 0;
 	allySelect = 0;
 	selectedAlly = 1;
-
+	gameLost = 0;
 }
 
 void gamestate_fight_update(void) // update function (60 fps)
@@ -111,6 +112,9 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) {
 		battleCompleted += 1;
+	}
+	if (!playerOne.alive && !playerTwo.alive && !playerThree.alive) {
+		gameLost = 1;
 	}
 
 
