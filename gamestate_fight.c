@@ -18,16 +18,16 @@
 #include "stdlib.h"
 #include "stdio.h"
 #include "character_functions.h"
-
+#include "gamestate_gameover.h"
 
 
 struct Character playerOne = { "Tank", 120, 120, 30, 30, 15, .3f, 5, 600, 200, 0, 1 }; // tank
 struct Character playerTwo = { "Wizard", 80, 80, 100, 100, 50, .0f, 10, 500, 400, 0, 1 }; // wiz
 struct Character playerThree = { "Rogue", 90, 90, 50, 50, 0, .1f, 15, 600, 600, 0, 1 }; // rogue
 
-struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 5, 900, 200, 0, 1 }; // enemy 1
-struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 5, 1000, 400, 0, 1 }; // enemy 2
-struct Character enemyThree = { "Stupid idiot 3", 100, 100, 100, 100, 25, 0.2f, 5, 900, 600, 0, 1 }; // enemy 3
+struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 500, 900, 200, 0, 1 }; // enemy 1
+struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 500, 1000, 400, 0, 1 }; // enemy 2
+struct Character enemyThree = { "Stupid idiot 3", 100, 100, 100, 100, 25, 0.2f, 500, 900, 600, 0, 1 }; // enemy 3
 
 
 float selectButtonY; // variable declarations
@@ -102,6 +102,21 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 
 void gamestate_fight_update(void) // update function (60 fps)
 {
+
+	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) {
+		battleCompleted += 1;
+	}
+	if (playerOne.alive == 0 && playerTwo.alive == 0 && playerThree.alive == 0) {
+
+		gameLost = 1;
+
+	}
+
+	if (gameLost == 1) {
+
+		CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
+	}
+
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
 	draw_characters();
@@ -109,13 +124,6 @@ void gamestate_fight_update(void) // update function (60 fps)
 	turn_manager();
 
 	debug();
-
-	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) {
-		battleCompleted += 1;
-	}
-	if (!playerOne.alive && !playerTwo.alive && !playerThree.alive) {
-		gameLost = 1;
-	}
 
 
 
@@ -589,23 +597,25 @@ void turn_manager() {
 void debug() {
 	CP_Settings_TextSize(30);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
-	char buffer[50] = { 0 };
+	char buffer[80] = { 0 };
 	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank def: %.2f", playerOne.health, playerOne.defense);
 	CP_Font_DrawText(buffer, 10.f, 400);
 	sprintf_s(buffer, _countof(buffer), "wizard health: %d\nwizard mana: %d", playerTwo.health, playerTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 450);
+	CP_Font_DrawText(buffer, 10.f, 440);
 	sprintf_s(buffer, _countof(buffer), "rogue health: %d\nrogue mana: %d", playerThree.health, playerThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 500);
+	CP_Font_DrawText(buffer, 10.f, 480);
 	sprintf_s(buffer, _countof(buffer), "enemy 1 health: %d\nenemy 1 mana: %d", enemyOne.health, enemyOne.mana);
-	CP_Font_DrawText(buffer, 10.f, 550);
+	CP_Font_DrawText(buffer, 10.f, 520);
 	sprintf_s(buffer, _countof(buffer), "enemy 2 health: %d\nenemy 2 mana: %d", enemyTwo.health, enemyTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 600);
+	CP_Font_DrawText(buffer, 10.f, 560);
 	sprintf_s(buffer, _countof(buffer), "enemy 3 health: %d\nenemy 2 mana: %d", enemyThree.health, enemyThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 650);
+	CP_Font_DrawText(buffer, 10.f, 600);
 	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nSelectAct: %d", characterTurn, enemyTurn, selectedAction);
-	CP_Font_DrawText(buffer, 10.f, 700);
-	sprintf_s(buffer, _countof(buffer), "Action: %d", actionSelect);
-	CP_Font_DrawText(buffer, 10.f, 750);
+	CP_Font_DrawText(buffer, 10.f, 640);
+	sprintf_s(buffer, _countof(buffer), "Action: %d\nGameOver: %d\nAlly: %d\n enemysel: %d", actionSelect, gameLost, allySelect, enemySelect);
+	CP_Font_DrawText(buffer, 10.f, 680);
+	sprintf_s(buffer, _countof(buffer), "player1 alive: %d\nplayer2 alive: %d\nplayer3 alive: %d", playerOne.alive, playerTwo.alive, playerThree.alive);
+	CP_Font_DrawText(buffer, 10.f, 720);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
