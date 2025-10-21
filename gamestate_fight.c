@@ -178,8 +178,7 @@ void button_Select(struct Character* _character) {
 			break;
 		case 2: // special 1
 			if (_character == &playerOne) { // tank special is increase defense
-				character_action_defend(_character);
-				characterTurn += 1;
+				allySelect = 1;
 			}
 			if (_character == &playerTwo) { // wiz special is heal ally
 				allySelect = 1;
@@ -390,13 +389,31 @@ void ally_Select(struct Character* _player) {
 		if (CP_Input_KeyTriggered(KEY_ENTER)) {
 			switch (selectedAlly) {
 			case 1:
-				character_action_heal(_player, &playerOne);
+				if (_player == &playerOne) {
+					character_action_defend(&playerOne);
+				}
+				else {
+
+					character_action_heal(_player, &playerOne);
+				}
 				break;
 			case 2:
-				character_action_heal(_player, &playerTwo);
+				if (_player == &playerOne) {
+					character_action_defend(&playerTwo);
+				}
+				else {
+
+					character_action_heal(_player, &playerTwo);
+				}
 				break;
 			case 3:
-				character_action_heal(_player, &playerThree);
+				if (_player == &playerOne) {
+					character_action_defend(&playerThree);
+				}
+				else {
+
+					character_action_heal(_player, &playerThree);
+				}
 				break;
 			}
 			allySelect = 0;
@@ -635,27 +652,29 @@ void turn_manager() {
 
 
 void debug() {
-	CP_Settings_TextSize(30);
+	CP_Settings_TextSize(20);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
 	char buffer[80] = { 0 };
-	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank def: %.2f", playerOne.health, playerOne.defense);
+	sprintf_s(buffer, _countof(buffer), "tank health: %d\ntank mana: %d", playerOne.health, playerOne.mana);
 	CP_Font_DrawText(buffer, 10.f, 400);
 	sprintf_s(buffer, _countof(buffer), "wizard health: %d\nwizard mana: %d", playerTwo.health, playerTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 440);
+	CP_Font_DrawText(buffer, 10.f, 430);
 	sprintf_s(buffer, _countof(buffer), "rogue health: %d\nrogue mana: %d", playerThree.health, playerThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 480);
+	CP_Font_DrawText(buffer, 10.f, 460);
 	sprintf_s(buffer, _countof(buffer), "enemy 1 health: %d\nenemy 1 mana: %d", enemyOne.health, enemyOne.mana);
-	CP_Font_DrawText(buffer, 10.f, 520);
+	CP_Font_DrawText(buffer, 10.f, 490);
 	sprintf_s(buffer, _countof(buffer), "enemy 2 health: %d\nenemy 2 mana: %d", enemyTwo.health, enemyTwo.mana);
-	CP_Font_DrawText(buffer, 10.f, 560);
+	CP_Font_DrawText(buffer, 10.f, 520);
 	sprintf_s(buffer, _countof(buffer), "enemy 3 health: %d\nenemy 2 mana: %d", enemyThree.health, enemyThree.mana);
-	CP_Font_DrawText(buffer, 10.f, 600);
+	CP_Font_DrawText(buffer, 10.f, 550);
 	sprintf_s(buffer, _countof(buffer), "Turn: %d\nenemyTurn: %d\nSelectAct: %d", characterTurn, enemyTurn, selectedAction);
-	CP_Font_DrawText(buffer, 10.f, 640);
+	CP_Font_DrawText(buffer, 10.f, 580);
 	sprintf_s(buffer, _countof(buffer), "Action: %d\nGameOver: %d\nAlly: %d\n enemysel: %d", actionSelect, gameLost, allySelect, selectedEnemy);
-	CP_Font_DrawText(buffer, 10.f, 680);
+	CP_Font_DrawText(buffer, 10.f, 610);
 	sprintf_s(buffer, _countof(buffer), "player1 alive: %d\nplayer2 alive: %d\nplayer3 alive: %d", playerOne.alive, playerTwo.alive, playerThree.alive);
-	CP_Font_DrawText(buffer, 10.f, 720);
+	CP_Font_DrawText(buffer, 10.f, 640);
+	sprintf_s(buffer, _countof(buffer), "tank def: %.2f\nwiz def: %.2f\nrogue def: %.2f", playerOne.defense, playerTwo.defense, playerThree.defense);
+	CP_Font_DrawText(buffer, 10.f, 670);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
