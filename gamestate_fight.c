@@ -25,9 +25,9 @@ struct Character playerOne = { "Tank", 100, 120, 30, 30, 15, .3f, 10, 600, 200, 
 struct Character playerTwo = { "Wizard", 70, 80, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
 struct Character playerThree = { "Rogue", 70, 90, 50, 50, 0, .1f, 5, 600, 600, 0, 1 }; // rogue
 
-struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 500, 900, 200, 0, 1 }; // enemy 1
-struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 500, 1000, 400, 0, 1 }; // enemy 2
-struct Character enemyThree = { "Stupid idiot 3", 100, 100, 100, 100, 25, 0.2f, 500, 900, 600, 0, 1 }; // enemy 3
+struct Character enemyOne = { "Stupid idiot 1", 100, 100, 100, 100, 25, 0.2f, 5, 900, 200, 0, 1 }; // enemy 1
+struct Character enemyTwo = { "Stupid idiot 2", 100, 100, 100, 100, 25, 0.2f, 5, 1000, 400, 0, 1 }; // enemy 2
+struct Character enemyThree = { "Stupid idiot 3", 100, 100, 100, 100, 25, 0.2f, 5, 900, 600, 0, 1 }; // enemy 3
 
 
 float selectButtonY; // variable declarations
