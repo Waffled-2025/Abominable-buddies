@@ -56,6 +56,8 @@ int enemyActionChoice;
 int allySelect;
 int selectedAlly;
 
+int battleCompleted = 0;
+
 
 
 void button_Select(struct Character* _character); // function declerations
@@ -107,7 +109,9 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 	debug();
 
-
+	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) {
+		battleCompleted += 1;
+	}
 
 
 
