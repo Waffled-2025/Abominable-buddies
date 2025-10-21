@@ -8,6 +8,8 @@
     <ClCompile Include="gamestate_menu.c" />
     <ClCompile Include="gamestate_splashscreen.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="character_functions.c" />
+    <ClCompile Include="gamestate_roundwon.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="character_functions.h">
@@ -29,6 +31,9 @@
       <Filter>header files</Filter>
     </ClInclude>
     <ClInclude Include="gamestate_splashscreen.h">
+      <Filter>header files</Filter>
+    </ClInclude>
+    <ClInclude Include="gamestate_roundwon.h">
       <Filter>header files</Filter>
     </ClInclude>
   </ItemGroup>
