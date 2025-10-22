@@ -53,7 +53,6 @@ int upDown;
 int enemyActionChoice;
 
 
-
 int allySelect;
 int selectedAlly;
 
@@ -62,6 +61,9 @@ int gameLost;
 
 int buried;
 
+
+
+float rotation;
 
 
 
@@ -104,7 +106,7 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	selectedAlly = 1;
 	gameLost = 0;
 	buried = 0;
-
+	rotation = 0;
 	
 
 }
@@ -137,7 +139,7 @@ void gamestate_fight_update(void) // update function (60 fps)
 	UI_healthbar(&playerOne);
 
 	debug();
-
+	rotation += 0.03f;
 
 
 }
@@ -565,7 +567,7 @@ void draw_characters() {
 	}
 
 	if (playerThree.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255);
+		CP_Image_DrawAdvanced(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255, rotation);
 	}
 
 	if (enemyOne.health > 0) {
@@ -574,6 +576,7 @@ void draw_characters() {
 
 	if (enemyTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyTwo.xPosition, enemyTwo.yPosition, 256, 256, 255);
+		
 	}
 
 	if (enemyThree.health > 0) {
