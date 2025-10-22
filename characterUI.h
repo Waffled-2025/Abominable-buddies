@@ -15,3 +15,4 @@
 #include "character_functions.h"
 
 void UI_healthbar(struct Character* _character);
+void UI_manabar(struct Character* _character);

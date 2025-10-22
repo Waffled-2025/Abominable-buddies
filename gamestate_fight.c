@@ -136,7 +136,13 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 	turn_manager(); // manages character turns
 
-	UI_healthbar(&playerOne);
+
+
+
+
+
+	CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+
 
 	debug();
 	rotation += 0.03f;
@@ -560,27 +566,41 @@ void player_Turn(struct Character* _character) {
 void draw_characters() {
 	if (playerOne.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), playerOne.xPosition, playerOne.yPosition, 256, 256, 255);
+		UI_healthbar(&playerOne);
+		UI_manabar(&playerOne);
 	}
 
 	if (playerTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), playerTwo.xPosition, playerTwo.yPosition, 256, 256, 255);
+
+		UI_healthbar(&playerTwo);
+		UI_manabar(&playerTwo);
 	}
 
 	if (playerThree.health > 0) {
 		CP_Image_DrawAdvanced(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255, rotation);
+
+		UI_healthbar(&playerThree);
+		UI_manabar(&playerThree);
+
 	}
 
 	if (enemyOne.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyOne.xPosition, enemyOne.yPosition, 256, 256, 255);
+		UI_healthbar(&enemyOne);
+		UI_manabar(&enemyOne);
 	}
 
 	if (enemyTwo.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyTwo.xPosition, enemyTwo.yPosition, 256, 256, 255);
-		
+		UI_healthbar(&enemyTwo);
+		UI_manabar(&enemyTwo);
 	}
 
 	if (enemyThree.health > 0) {
 		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyThree.xPosition, enemyThree.yPosition, 256, 256, 255);
+		UI_healthbar(&enemyThree);
+		UI_manabar(&enemyThree);
 	}
 
 }
