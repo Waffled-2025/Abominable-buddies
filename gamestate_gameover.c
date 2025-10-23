@@ -18,10 +18,12 @@
 #include "gamestate_game.h"
 #include "gamestate_menu.h"
 
+CP_Image GameOverImage;
 // use CP_Engine_SetNextGameState to specify this function as the initialization function
 // this function will be called once at the beginning of the program
 void gamestate_gameover_init(void)
 {
+	GameOverImage = CP_Image_Load("./Assets/GameOver.png");
 	CP_System_SetWindowSize(1200, 800);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
@@ -36,6 +38,7 @@ void gamestate_gameover_update(void)
 {
 	CP_Settings_TextSize(150);
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 130, 255, 100));
+	CP_Image_Draw(GameOverImage, 600, 400, 1200, 800, 255);
 	CP_Font_DrawText("GAME OVER", 600, 100);
 
 	if (button_func(CP_Input_GetMouseX(), CP_Input_GetMouseY(), 500, 125, 600, 300)) {

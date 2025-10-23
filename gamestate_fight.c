@@ -19,7 +19,8 @@
 #include "stdio.h"
 #include "character_functions.h"
 #include "gamestate_gameover.h"
-
+#include "gamestate_roundwon.h"
+#include "characterUI.h"
 
 struct Character playerOne = { "Tank", 100, 100, 30, 30, 15, .3f, 10, 600, 200, 0, 1 }; // tank
 struct Character playerTwo = { "Wizard", 70, 70, 100, 100, 50, .0f, 15, 500, 400, 0, 1 }; // wiz
@@ -52,7 +53,6 @@ int upDown;
 int enemyActionChoice;
 
 
-
 int allySelect;
 int selectedAlly;
 
@@ -63,13 +63,17 @@ int buried;
 
 
 
+float rotation;
+
+
 
 void button_Select(struct Character* _character); // function declerations
 void enemy_Select(struct Character* _player);
 void enemy_Turn(struct Character* _enemy);
 void player_Turn(struct Character* _character);
-void draw_characters();
+void draw_characters(struct Character* _character, CP_Image);
 
+void reset_characters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);
 
 void turn_manager();
 
@@ -102,6 +106,8 @@ void gamestate_fight_init(void) // variable initlizations and screen/text stuff
 	selectedAlly = 1;
 	gameLost = 0;
 	buried = 0;
+	rotation = 0;
+	
 
 }
 
@@ -110,6 +116,7 @@ void gamestate_fight_update(void) // update function (60 fps)
 
 	if (!enemyOne.alive && !enemyTwo.alive && !enemyThree.alive) { // If battle won, battle Completed +=1
 		battleCompleted += 1;
+		CP_Engine_SetNextGameState(gamestate_roundwon_init, gamestate_roundwon_update, gamestate_roundwon_exit);
 	}
 	if (playerOne.alive == 0 && playerTwo.alive == 0 && playerThree.alive == 0) { // every dead means battle lost
 
@@ -122,14 +129,28 @@ void gamestate_fight_update(void) // update function (60 fps)
 		CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
 	}
 
+
 	CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 0));
 
-	draw_characters(); // draws characters
+	draw_characters(&playerOne, CP_Image_Load("./Assets/its merely a flesh wound.png")); // draws characters
+	draw_characters(&playerTwo, CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"));
+	draw_characters(&enemyOne, CP_Image_Load("./Assets/s n o w m e n e m y.png"));
+	draw_characters(&enemyTwo, CP_Image_Load("./Assets/s n o w m e n e m y.png"));
+	draw_characters(&enemyThree, CP_Image_Load("./Assets/s n o w m e n e m y.png"));
+
 
 	turn_manager(); // manages character turns
 
-	debug();
 
+
+
+
+
+	CP_Settings_Fill(CP_Color_Create(0, 255, 0, 255));
+
+
+	debug();
+	rotation += 0.03f;
 
 
 }
@@ -547,30 +568,24 @@ void player_Turn(struct Character* _character) {
 
 }
 
-void draw_characters() {
-	if (playerOne.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/its merely a flesh wound.png"), playerOne.xPosition, playerOne.yPosition, 256, 256, 255);
+void draw_characters(struct Character* _character, CP_Image image) {
+	if (_character->health > 0) {
+		CP_Image_Draw(image, _character->xPosition, _character->yPosition, 256, 256, 255);
+		UI_healthbar(_character);
+		UI_manabar(_character);
 	}
 
-	if (playerTwo.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/YOU SHALL NOT PASS.png"), playerTwo.xPosition, playerTwo.yPosition, 256, 256, 255);
-	}
+
 
 	if (playerThree.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255);
+		CP_Image_DrawAdvanced(CP_Image_Load("./Assets/sneak sneak.png"), playerThree.xPosition, playerThree.yPosition, 656, -106, 255, rotation);
+
+		UI_healthbar(&playerThree);
+		UI_manabar(&playerThree);
+
 	}
 
-	if (enemyOne.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyOne.xPosition, enemyOne.yPosition, 256, 256, 255);
-	}
 
-	if (enemyTwo.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyTwo.xPosition, enemyTwo.yPosition, 256, 256, 255);
-	}
-
-	if (enemyThree.health > 0) {
-		CP_Image_Draw(CP_Image_Load("./Assets/s n o w m e n e m y.png"), enemyThree.xPosition, enemyThree.yPosition, 256, 256, 255);
-	}
 
 }
 
@@ -582,7 +597,6 @@ void turn_manager() {
 	case 1:
 		if (playerOne.health < 1) {
 			characterTurn += 1;
-			playerOne.alive = 0;
 			break;
 		}
 		else 
@@ -592,7 +606,6 @@ void turn_manager() {
 	case 2:
 		if (enemyOne.health < 1) {
 			characterTurn += 1;
-			enemyOne.alive = 0;
 			actionSelect = 1;
 			break;
 		}
@@ -603,7 +616,6 @@ void turn_manager() {
 	case 3:
 		if (playerTwo.health < 1) {
 			characterTurn += 1;
-			playerTwo.alive = 0;
 			break;
 		}
 		else 
@@ -612,7 +624,6 @@ void turn_manager() {
 		break;
 	case 4:
 		if (enemyTwo.health < 1) {
-			enemyTwo.alive = 0;
 			characterTurn += 1;
 			actionSelect = 1;
 			break;
@@ -623,7 +634,6 @@ void turn_manager() {
 		break;
 	case 5:
 		if (playerThree.health < 1) {
-			playerThree.alive = 0;
 			characterTurn += 1;
 			break;
 		}
@@ -634,7 +644,6 @@ void turn_manager() {
 		break;
 	case 6:
 		if (enemyThree.health < 1) {
-			enemyThree.alive = 0;
 			characterTurn += 1;
 			actionSelect = 1;
 			break;
@@ -648,7 +657,19 @@ void turn_manager() {
 	}
 }
 
+void reset_characters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree) {
 
+	playerOne.health = _playerOne->health; playerTwo.health = _playerTwo->health; playerThree.health = _playerThree->health;
+	playerOne.alive = 1; playerTwo.alive = 1; playerThree.alive = 1;
+	playerOne.attackDamage = _playerOne->attackDamage; playerTwo.attackDamage = _playerTwo->attackDamage; playerThree.attackDamage = _playerThree->attackDamage;
+	playerOne.defended = 0; playerTwo.defended = 0; playerThree.defended = 0;
+	playerOne.defense = _playerOne->defense; playerTwo.defense = _playerTwo->defense; playerThree.defense = _playerThree->defense;
+	playerOne.mana = _playerOne->mana; playerTwo.mana = _playerTwo->mana; playerThree.mana = _playerThree->mana;
+	playerOne.manaRegen = _playerOne->manaRegen; playerTwo.manaRegen = _playerTwo->manaRegen; playerThree.manaRegen = _playerThree->manaRegen;
+	playerOne.maxHealth = _playerOne->maxHealth; playerTwo.maxHealth = _playerTwo->maxHealth; playerThree.maxHealth = _playerThree->maxHealth;
+	playerOne.maxMana = _playerOne->maxMana; playerTwo.maxMana = _playerTwo->maxMana; playerThree.maxMana = _playerThree->maxMana;
+
+}
 
 
 void debug() {
@@ -673,7 +694,7 @@ void debug() {
 	CP_Font_DrawText(buffer, 10.f, 610);
 	sprintf_s(buffer, _countof(buffer), "player1 alive: %d\nplayer2 alive: %d\nplayer3 alive: %d", playerOne.alive, playerTwo.alive, playerThree.alive);
 	CP_Font_DrawText(buffer, 10.f, 640);
-	sprintf_s(buffer, _countof(buffer), "tank def: %.2f\nwiz def: %.2f\nrogue def: %.2f", playerOne.defense, playerTwo.defense, playerThree.defense);
+	sprintf_s(buffer, _countof(buffer), "tank def: %d\nwiz def: %d\nrogue def: %d", playerOne.defended, playerTwo.defended, playerThree.defended);
 	CP_Font_DrawText(buffer, 10.f, 670);
 	CP_Settings_TextSize(45);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);

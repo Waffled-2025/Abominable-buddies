@@ -16,3 +16,4 @@
 void gamestate_game_init(void);
 void gamestate_game_update(void);
 void gamestate_game_exit(void);
+int menu;

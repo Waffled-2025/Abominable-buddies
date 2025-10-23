@@ -13,9 +13,6 @@
 
 #pragma once
 #include "character_functions.h"
-void gamestate_fight_init(void);
-void gamestate_fight_update(void);
-void gamestate_fight_exit(void);
-int battleCompleted;
-int gameLost;
-void reset_characters(struct Character* _playerOne, struct Character* _playerTwo, struct Character* _playerThree);
+
+void UI_healthbar(struct Character* _character);
+void UI_manabar(struct Character* _character);

@@ -47,9 +47,9 @@ void game_exit(void)
 int main(void)
 {
 	//CP_Engine_SetNextGameState(gamestate_splashscreen_init, gamestate_splashscreen_update, gamestate_splashscreen_exit);
-	//CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
+	CP_Engine_SetNextGameState(gamestate_fight_init, gamestate_fight_update, gamestate_fight_exit);
 	//CP_Engine_SetNextGameState(gamestate_gameover_init, gamestate_gameover_update, gamestate_gameover_exit);
-	CP_Engine_SetNextGameState(gamestate_roundwon_init, gamestate_roundwon_update, gamestate_roundwon_exit);
+	//CP_Engine_SetNextGameState(gamestate_roundwon_init, gamestate_roundwon_update, gamestate_roundwon_exit);
 	CP_Engine_Run();
 	return 0;
 }
